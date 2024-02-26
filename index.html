@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Prueba de API</title>
+</head>
+
+<body>
+    <script src="KD2024.js"></script>
+    <p>hello world</p>
+    <script>
+
+
+
+        /*
+                let row = KDColumn();
+        
+                row.append(
+                    KDInputButton({
+                        value: "Haz click aqui",
+        
+                    }),
+        
+                    KDInputButton({
+                        value: "Otro valor",
+                        events: {
+                            click: function () { row.setValueByField("texto", "otro valor") },
+                        },
+        
+                    }),
+                    KDInputText({ field: "texto" })
+                        .appendStyle("background-color", "red")
+                        .appendStyle("color", "white")
+                        .appendStyle("font-weight", "bold")
+                        .appendStyle("text-align", "center"),
+        
+                    KDInputColorPicker({ field: "color" }),
+                    KDInputEmail(),
+                    KDInputTime()
+        
+                )
+                    .build()
+                    .show();
+        
+        
+                KDColumn().append(
+        
+                    KDRow().append(
+                        KDInputButton({ value: "7" }),
+                        KDInputButton({ value: "8" }),
+                        KDInputButton({ value: "9" }),
+                    ),
+                    KDRow().append(
+                        KDInputButton({ value: "4" }),
+                        KDInputButton({ value: "5" }),
+                        KDInputButton({ value: "6" }),
+                    ),
+                    KDRow().append(
+                        KDInputButton({ value: "1" }),
+                        KDInputButton({ value: "2" }),
+                        KDInputButton({ value: "3" }),
+                    ),
+        
+        
+        
+                ).build().show();
+        */
+
+
+
+        var datos = {
+            data: [
+                { "marca": "ford", "modelo": "fiesta", "año": "2008" },
+                { "marca": "mazda", "modelo": "3", "año": "2009" },
+                { "marca": "chevrolet", "modelo": "corsa", "año": "2005" }
+            ]
+        };
+
+        var datos2 = {
+            data: [
+                { "marca": "ford", "modelo": "fiesta", "año": "2008" },
+                { "marca": "mazda", "modelo": "3", "año": "2009" },
+                { "marca": "chevrolet", "modelo": "corsa", "año": "2005" },
+                { "marca": "chevrolet", "modelo": "aveo", "año": "2006" },
+                { "marca": "fiat", "modelo": "palio", "año": "2000" },
+                { "marca": "crysler", "modelo": "neon", "año": "2002" }
+            ]
+        };
+
+
+        KDList({cssText: "border:1px dashed black; background-color:lightgray; width:fit-content; padding:10px; border-radius:10px"}).append(
+            KDRow().append(
+                KDInputText({ field: "marca", cssText: "width:fit-content" }),
+                KDInputText({ field: "modelo" }),
+                KDInputText({ field: "año" }),
+            )
+        )
+            .setData(datos2.data)
+            .show()
+
+
+
+
+
+
+    </script>
+</body>
+
+</html>
