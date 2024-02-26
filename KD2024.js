@@ -1,8 +1,11 @@
+
+
+/**
+ * Useful framework KD object
+ */
 const KD = {
     version: "0.1.0",
-
     idCounter: 0,
-
     createId: function () {
         return "kd" + KD.idCounter++;
     },
@@ -18,8 +21,16 @@ Master class of all objects`s
 class KDObject {
     constructor(params) {
 
+        /**
+         * @type {string} ID Is a unique identifier used on the DOM and JS objects.
+         */
         this.id = KD.createId();
 
+
+        /**
+         * 
+         * @returns {KDObject} Clone of the given KD object.
+         */
         this.clone = function () {
             let obj = new KDObject();
             for (let p in this) {
@@ -34,7 +45,9 @@ class KDObject {
 }
 
 
-
+/**
+ * Base class of all components.
+ */
 class KDComponent extends KDObject {
     constructor(params) {
         super(params);
@@ -53,12 +66,24 @@ class KDComponent extends KDObject {
          */
         this.htmlType = null;
 
+        /**
+         * @type {String} Name field used for data syncronization.
+         */
         this.field = null;
 
+        /**
+         * @type {String} CSS text for the component.
+         */
         this.cssText = "";
 
+        /**
+         * @type {any} Value of the component.
+         */
         this.value = undefined;
 
+        /**
+         * @type {boolean} If the component is built this property will be true.
+         */
         this.isBuilt = false;
 
 
@@ -82,7 +107,10 @@ class KDComponent extends KDObject {
             return obj;
         }
 
-
+        /**
+         * 
+         * @param {*} value Set the value of the component.
+         */
         this.setValue = function (value) {
             this.value = value;
             if (this.isBuilt) {
@@ -90,11 +118,18 @@ class KDComponent extends KDObject {
             }
         }
 
+        /**
+         * 
+         * @returns {any} Get the value of the component.
+         */
         this.getValue = function () {
             if (this.isBuilt) { return this.domElement.value; } else { return this.value }
         }
 
-
+        /**
+         * 
+         * @returns {KDVisualComponent} Build the component.
+         */
         this.build = function () {
             //Create element
             this.domElement = document.createElement(this.htmlElement);
@@ -119,6 +154,9 @@ class KDComponent extends KDObject {
     }
 }
 
+/**
+ * Base class of all visual components.
+ */
 class KDVisualComponent extends KDComponent {
     constructor(params) {
         super(params);
@@ -172,6 +210,9 @@ class KDVisualComponent extends KDComponent {
     }
 }
 
+/**
+ * Base class of all visual components whose contains other components.
+ */
 class KDVisualComponentContainer extends KDVisualComponent {
     constructor(params) {
         super(params);
@@ -300,7 +341,11 @@ class KDVisualComponentContainer extends KDVisualComponent {
 }
 
 
-
+/**
+ * 
+ * @param {*} params 
+ * @returns A row component containing other components on it.
+ */
 function KDRow(params) {
     let obj = new KDVisualComponentContainer(params);
     obj.htmlElement = "div";
@@ -310,8 +355,8 @@ function KDRow(params) {
 }
 
 /**
- * Hace falta un componente contenedor con componentes internos para mostrar datos
- * un array de objetos con datos para mostrar
+ * Speial case of KDVisualComponentContainer which contains only one component in it, that is a template for 
+ * iteration over the data.
  * @param {*} params 
  * @returns 
  */
@@ -342,6 +387,9 @@ function KDList(params) {
         return this;
     }
 
+    /**
+     * Fill the list with data, creating a component for each item in the data array.
+     */
     obj.fill = function () {
         for (let i = 0; i < this.data.length; i++) {
             const comps = this.componentsTemplate.clone();
@@ -382,6 +430,17 @@ function KDInputCheckBox(params) {
     let obj = new KDVisualComponent(params);
     obj.htmlElement = "input";
     obj.htmlType = "checkbox";
+    obj.setValue =
+        function (value) {
+            if (value) {
+                this.domElement.checked = true;
+            } else {
+                this.domElement.checked = false;
+            }
+        }
+    obj.getValue = function () {
+        return this.domElement.checked;
+    }
     return obj;
 }
 

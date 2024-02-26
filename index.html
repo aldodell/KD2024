@@ -89,11 +89,11 @@
         };
 
 
-        KDList({cssText: "border:1px dashed black; background-color:lightgray; width:fit-content; padding:10px; border-radius:10px"}).append(
+        KDList({ cssText: "border:1px dashed black; background-color:lightgray; width:fit-content; padding:10px; border-radius:10px" }).append(
             KDRow().append(
                 KDInputText({ field: "marca", cssText: "width:fit-content" }),
                 KDInputText({ field: "modelo" }),
-                KDInputText({ field: "año" }),
+                KDInputSearch({ field: "año" }),
             )
         )
             .setData(datos2.data)
