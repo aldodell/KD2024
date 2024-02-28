@@ -13,59 +13,7 @@
 
 
 
-        /*
-                let row = KDColumn();
-        
-                row.append(
-                    KDInputButton({
-                        value: "Haz click aqui",
-        
-                    }),
-        
-                    KDInputButton({
-                        value: "Otro valor",
-                        events: {
-                            click: function () { row.setValueByField("texto", "otro valor") },
-                        },
-        
-                    }),
-                    KDInputText({ field: "texto" })
-                        .appendStyle("background-color", "red")
-                        .appendStyle("color", "white")
-                        .appendStyle("font-weight", "bold")
-                        .appendStyle("text-align", "center"),
-        
-                    KDInputColorPicker({ field: "color" }),
-                    KDInputEmail(),
-                    KDInputTime()
-        
-                )
-                    .build()
-                    .show();
-        
-        
-                KDColumn().append(
-        
-                    KDRow().append(
-                        KDInputButton({ value: "7" }),
-                        KDInputButton({ value: "8" }),
-                        KDInputButton({ value: "9" }),
-                    ),
-                    KDRow().append(
-                        KDInputButton({ value: "4" }),
-                        KDInputButton({ value: "5" }),
-                        KDInputButton({ value: "6" }),
-                    ),
-                    KDRow().append(
-                        KDInputButton({ value: "1" }),
-                        KDInputButton({ value: "2" }),
-                        KDInputButton({ value: "3" }),
-                    ),
-        
-        
-        
-                ).build().show();
-        */
+        KDScreen().show().pushToBack();
 
 
 
@@ -89,8 +37,15 @@
         };
 
 
-        KDList({ cssText: "border:1px dashed black; background-color:lightgray; width:fit-content; padding:10px; border-radius:10px" }).append(
-            KDRow().append(
+        KDList({ cssText: "border:1px dashed black; background-color:lightgray; width:fit-content; padding:10px; border-radius:10px; position:fixed;" }).append(
+            KDRow({
+                events:
+                {
+                    mouseover: function () { this.kd.appendChildrenStyle("background-color", "gold") },
+                    mouseout: function () { this.kd.appendChildrenStyle("background-color", "white") }
+                }
+            },
+            ).append(
                 KDInputText({ field: "marca", cssText: "width:fit-content" }),
                 KDInputText({ field: "modelo" }),
                 KDInputSearch({ field: "año" }),
@@ -98,6 +53,7 @@
         )
             .setData(datos2.data)
             .show()
+            .bringToFront();
 
 
 

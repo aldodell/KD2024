@@ -87,6 +87,8 @@ class KDComponent extends KDObject {
         this.isBuilt = false;
 
 
+
+
         if (params !== undefined) {
             for (let param in params) {
                 this[param] = params[param];
@@ -148,7 +150,7 @@ class KDComponent extends KDObject {
                 this.domElement.addEventListener(e, this.events[e]);
             }
 
-
+            this.domElement.kd = this;
             return this;
         }
     }
@@ -207,6 +209,26 @@ class KDVisualComponent extends KDComponent {
             surface.appendChild(this.domElement);
             return this;
         }
+
+        this.bringToFront = function () {
+            if (this.isBuilt) {
+                this.domElement.style.zIndex++;
+            }
+            return this;
+        }
+
+        this.pushToBack = function () {
+            if (this.isBuilt) {
+                let z = this.domElement.style.zIndex;
+                if (z > 0) {
+                    this.domElement.style.zIndex--;
+                }
+
+            }
+            return this;
+        }
+
+
     }
 }
 
@@ -337,6 +359,28 @@ class KDVisualComponentContainer extends KDVisualComponent {
             return obj;
         }
 
+
+
+        this.appendChildrenStyle = function (property, value) {
+
+            if (this.cssTextForChildren === null) {
+                this.cssTextForChildren = "";
+            }
+
+            this.cssTextForChildren += property + ":" + value + ";";
+
+            for (let i = 0; i < this.components.length; i++) {
+
+                let comp = this.components[i];
+                comp.cssText += this.cssTextForChildren;
+                if (comp.isBuilt == true) {
+                    comp.domElement.style.cssText = comp.cssText;
+                    comp.cssText = comp.domElement.style.cssText;
+                }
+            }
+
+            return this;
+        }
     }
 }
 
@@ -346,13 +390,27 @@ class KDVisualComponentContainer extends KDVisualComponent {
  * @param {*} params 
  * @returns A row component containing other components on it.
  */
-function KDRow(params) {
+function KDLayer(params) {
     let obj = new KDVisualComponentContainer(params);
     obj.htmlElement = "div";
-    //obj.cssText += "display:inline;";
+    obj.cssTextForChildren += ";position:fix;";
+    return obj;
+}
+
+
+function KDRow(params) {
+    let obj = KDLayer(params);
     obj.cssTextForChildren += "display:inline;";
     return obj;
 }
+
+
+function KDColumn(params) {
+    let obj = KDLayer(params);
+    obj.cssTextForChildren += "display:block;";
+    return obj;
+}
+
 
 /**
  * Speial case of KDVisualComponentContainer which contains only one component in it, that is a template for 
@@ -404,13 +462,6 @@ function KDList(params) {
 }
 
 
-function KDColumn(params) {
-    let obj = new KDVisualComponentContainer(params);
-    obj.htmlElement = "div";
-    //obj.cssText += "display:block;";
-    obj.cssTextForChildren += "display:block;";
-    return obj;
-}
 
 function KDInputButton(params) {
     let obj = new KDVisualComponent(params);
@@ -577,3 +628,9 @@ function KDInputWeek(params) {
     return obj;
 }
 
+function KDScreen(params) {
+    let obj = new KDVisualComponentContainer(params);
+    obj.htmlElement = "div";
+    obj.cssText = "position:fixed; top:0; left:0; width:100%; height:100%; background-color: LemonChiffon ;";
+    return obj;
+}
