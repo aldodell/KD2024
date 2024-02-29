@@ -86,15 +86,13 @@ class KDComponent extends KDObject {
          */
         this.isBuilt = false;
 
-
-
+        this.events = [];
 
         if (params !== undefined) {
             for (let param in params) {
                 this[param] = params[param];
             }
         }
-
 
 
         this.KDObjectClone = this.clone;
@@ -135,8 +133,10 @@ class KDComponent extends KDObject {
         this.build = function () {
             //Create element
             this.domElement = document.createElement(this.htmlElement);
+
             //Set isBuilt to true   
             this.isBuilt = true;
+
             //Assign html type if exists
             if (this.htmlType !== null) {
                 this.domElement.setAttribute("type", this.htmlType);
@@ -151,6 +151,16 @@ class KDComponent extends KDObject {
             }
 
             this.domElement.kd = this;
+            return this;
+        }
+
+        this.addEvent = function (event, action) {
+            this.events[event] = action;
+            if (this.isBuilt) {
+                for (let e in this.events) {
+                    this.domElement.addEventListener(e, this.events[e]);
+                }
+            }
             return this;
         }
     }
@@ -227,6 +237,38 @@ class KDVisualComponent extends KDComponent {
             }
             return this;
         }
+
+
+        /**
+         * Make the component draggable.
+         * @param {*} pointer Component that will receive the drag action from mouse.
+         * @param {*} movable  Component that will be moved
+         */
+        this.draggable = function (pointer, movable) {
+
+            if (movable === undefined) {
+                movable = pointer;
+            }
+
+            pointer.domElement.onmousedown = function (event) {
+                let rect = pointer.domElement.getBoundingClientRect();
+                movable.dragX = event.clientX - rect.x;
+                movable.dragY = event.clientY - rect.y;
+
+                movable.domElement.onmousemove = function (event) {
+                    movable.domElement.style.left = event.clientX - movable.dragX + "px";
+                    movable.domElement.style.top = event.clientY - movable.dragY + "px";
+                }
+
+                movable.domElement.onmouseup = function () {
+                    movable.domElement.onmousemove = null;
+                    movable.domElement.onmouseup = null;
+
+                };
+
+            };
+        }
+
 
 
     }
@@ -632,5 +674,108 @@ function KDScreen(params) {
     let obj = new KDVisualComponentContainer(params);
     obj.htmlElement = "div";
     obj.cssText = "position:fixed; top:0; left:0; width:100%; height:100%; background-color: LemonChiffon ;";
+    obj.cssText += "";
     return obj;
 }
+
+
+
+
+function KDWindowTheme(params) {
+    let obj = new KDObject(params);
+
+    obj.frameStyle = "position:absolute; top:0; left:0; width:200px; height:200px; border:4px solid Gray; background-color:LightCyan;";
+    obj.headStyle = "position:absolute; top:0; left:0; width:100%; height:32px;  text-align:center; padding-top:8px;color:white; ";
+    obj.bodyStyle = "position:absolute; top:32px; left:0; width:100%; height:calc(100% - 32px); background-color:LightCyan;";
+    obj.footStyle = "position:absolute; bottom:0; left:0; width:100%; height:32px; background-color:DarkCyan;";
+
+    return obj;
+}
+
+
+function KDWindowThemeDefault(params) {
+    let obj = new KDWindowTheme(params);
+    obj.frameStyle += "background-color:DodgerBlue; border:4px solid Gray; border-radius:5px;";
+    obj.headStyle += "background-color:DodgerBlue; color:white;";
+    obj.bodyStyle += "background-color:GhostWhite;";
+    obj.footStyle += "background-color:RoyalBlue;";
+    return obj;
+}
+
+
+function KDWindowThemeGold(params) {
+    let obj = new KDWindowTheme(params);
+    obj.frameStyle += "border:3px dotted Gold;background-color:Blue;";
+    obj.headStyle += "background-color:DarkCyan;color:Black;";
+    obj.bodyStyle += "background-color:Gold;";
+    obj.footStyle += "background-color:Gold;";
+    return obj;
+}
+
+
+
+function KDWindow(params) {
+    let frame = new KDVisualComponentContainer(params);
+    frame.htmlElement = "div";
+    frame.theme = KDWindowThemeDefault();
+    frame.title = "";
+
+    frame.head = new KDVisualComponentContainer(params);
+    frame.head.htmlElement = "div";
+
+    frame.body = new KDVisualComponentContainer(params);
+    frame.body.htmlElement = "div";
+
+    frame.foot = new KDVisualComponentContainer(params);
+    frame.foot.htmlElement = "div";
+
+    frame.append(frame.head);
+    frame.append(frame.body);
+    frame.append(frame.foot);
+
+    frame.applyTheme = function (theme) {
+        frame.appendStyle(theme.frameStyle);
+        frame.head.appendStyle(theme.headStyle);
+        frame.body.appendStyle(theme.bodyStyle);
+        frame.foot.appendStyle(theme.footStyle);
+        return frame;
+    }
+
+    frame.KDVisualComponentContainerBuild = frame.build;
+
+    frame.build = function () {
+        this.KDVisualComponentContainerBuild();
+
+        //Apply theme
+        this.applyTheme(KDWindowThemeDefault());
+
+        //Apply title
+        frame.head.domElement.innerText = this.title;
+
+        //Make window draggable
+        frame.draggable(frame.head, frame);
+
+        return this;
+    }
+
+
+    frame.setTitle = function (title) {
+        frame.title = title;
+        if (frame.isBuilt) {
+            frame.head.domElement.innerText = title;
+        }
+        return frame;
+    }
+
+
+    frame.append = function (components) {
+        for (let i = 0; i < arguments.length; i++) {
+            frame.body.append(arguments[i]);
+        }
+        return this;
+    }
+
+
+    return frame;
+}
+

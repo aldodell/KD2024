@@ -13,10 +13,6 @@
 
 
 
-        KDScreen().show().pushToBack();
-
-
-
         var datos = {
             data: [
                 { "marca": "ford", "modelo": "fiesta", "año": "2008" },
@@ -52,12 +48,22 @@
             )
         )
             .setData(datos2.data)
-            .show()
-            .bringToFront();
+            .bringToFront()
+            .show();
 
 
 
+        KDWindow()
+            .setTitle("Título")
+            .append(
+                KDInputButton()
+                    .setValue("Hola mundo")
+            )
+            .show();
 
+
+
+        // KDInputButton({value: "Pulsa"}).addEvent("click", function(){alert('hola')}).show();
 
 
     </script>
