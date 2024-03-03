@@ -918,12 +918,10 @@ function KDInputWeek(params) {
 function KDScreen(params) {
     let obj = new KDVisualComponentContainer(params);
     obj.htmlElement = "div";
-    obj.cssText = "position:fixed; top:0; left:0; width:100%; height:100%; background-color: LemonChiffon ;";
+    obj.cssText = "position:fixed; top:0; left:0; width:100%; height:100%; background-color: LemonChiffon; border:1px solid Black; box-sizing:border-box;";
     obj.cssText += "";
     return obj;
 }
-
-
 
 
 function KDWindowTheme(params) {
@@ -1026,5 +1024,32 @@ function KDWindow(params) {
     return frame;
 }
 
+
+
+function KDMessage(params) {
+    let obj = new KDObject(params);
+    return obj;
+}
+
+class KSApplication extends KDObject {
+    /**
+     * Constructor for creating a new instance.
+     *
+     * @param {params} params - the parameters for the constructor
+     * @return {KSApplication} The newly created instance
+     */
+    constructor(params) {
+        super(params);
+
+    }
+
+    run() {
+        return this;
+    }
+
+    processMesage(message) {
+        return this;
+    }
+}
 
 
