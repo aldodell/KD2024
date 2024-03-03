@@ -12,6 +12,10 @@ const KD = {
         return "kd" + KD.idCounter++;
     },
 
+    kernel: {
+        applications: [],
+    },
+
 
 }
 
@@ -30,12 +34,19 @@ class KDObject {
      */
     constructor(params) {
 
-
         /**
          * ID Is a unique identifier used on the DOM and JS objects.
          * @type {String}
          */
         this.id = KD.createId();
+
+
+        //Proccess the params
+        if (params !== undefined) {
+            for (let param in params) {
+                this[param] = params[param];
+            }
+        }
 
 
         /**
@@ -118,14 +129,6 @@ class KDComponent extends KDObject {
          * @type {Array}
          */
         this.events = [];
-
-
-        //Proccess the params
-        if (params !== undefined) {
-            for (let param in params) {
-                this[param] = params[param];
-            }
-        }
 
 
         //Subclassing the clone method
@@ -288,7 +291,7 @@ class KDVisualComponent extends KDComponent {
                 this.cssText = "";
             }
 
-            this.cssText += cssText+ ";";
+            this.cssText += cssText + ";";
 
             if (this.isBuilt) {
                 this.domElement.style.cssText = this.cssText;
@@ -296,9 +299,6 @@ class KDVisualComponent extends KDComponent {
 
             return this;
         }
-
-
-
 
 
         this.KDComponentBuild = this.build;
@@ -424,16 +424,30 @@ class KDVisualComponent extends KDComponent {
          */
         this.setSize = function (width, height) {
 
-            if (!isNaN(width)) width = width + "px";
-            if (!isNaN(height)) height = height + "px";
 
-            this.width = width;
-            this.height = height;
+            if (width != null) {
+                if (typeof width === "number") {
+                    width = width + "px";
+                }
+                this.width = width;
 
-            if (this.isBuilt) {
-                this.domElement.style.width = width;
-                this.domElement.style.height = height;
+                if (this.isBuilt) {
+                    this.domElement.style.width = width;
+                }
+
             }
+
+            if (height != null) {
+                if (typeof height === "number") {
+                    height = height + "px";
+                }
+                this.height = height;
+                if (this.isBuilt) {
+                    this.domElement.style.height = height;
+                }
+            }
+
+
             return this;
         }
 
@@ -975,6 +989,8 @@ function KDWindow(params) {
     //Super frame is a Special Frame
     frame.superFrame.cssText = "position:absolute; top:-20px; left: -20px; width:calc(100% + 40px); height:64px;";
 
+
+
     /**
      * This code snippet defines a function forBody on the frame object, which takes a callback as an argument. Inside the function, it calls the callback with frame.body as the argument and then returns this.
      * @param {*} callback 
@@ -1012,6 +1028,7 @@ function KDWindow(params) {
         this.makeDraggable(this.superFrame, this);
         this.applyTheme(this.theme);
 
+
         return this;
     }
 
@@ -1021,6 +1038,7 @@ function KDWindow(params) {
         }
         return this;
     }
+
     return frame;
 }
 
@@ -1028,18 +1046,25 @@ function KDWindow(params) {
 
 function KDMessage(params) {
     let obj = new KDObject(params);
+    obj.source = obj.source ? obj.source : "";
+    obj.target = obj.target ? obj.target : "";
+    obj.data = obj.data ? obj.data : "";
     return obj;
 }
 
-class KSApplication extends KDObject {
+
+
+class KDApplication extends KDObject {
     /**
      * Constructor for creating a new instance.
      *
      * @param {params} params - the parameters for the constructor
-     * @return {KSApplication} The newly created instance
+     * @return {KDApplication} The newly created instance
      */
     constructor(params) {
         super(params);
+        KD.kernel.applications.push(this);
+        this.name = this.name ? this.name : "Application";
 
     }
 
@@ -1053,3 +1078,99 @@ class KSApplication extends KDObject {
 }
 
 
+function KDApplicationManager(params) {
+    let obj = KD.kernel;
+
+    obj.append = function (app) {
+        obj.applications.push(app);
+        return obj;
+    }
+
+    obj.sendMessage = function (message) {
+        for (let i = 0; i < obj.applications.length; i++) {
+            if (message.target == obj.applications[i].name) {
+                obj.applications[i].processMesage(message);
+            }
+        }
+    }
+
+    return obj;
+}
+
+
+function KDTerminalApplication(params) {
+    let app = new KDApplication(params);
+    app.focusedLine = null;
+
+    app.processLine = function (line) {
+
+        let l = line.split(" ");
+        let cmd = l[0];
+        let args = l.slice(1).join("");
+
+        KDApplicationManager().sendMessage(KDMessage({ "source": "terminal", "target": cmd, "data": args }));
+
+        return app;
+    }
+
+
+    app.newLine = function () {
+        app.window.append(
+            KDInputText()
+                .appendStyleCssText("width:100%; border:none; outline:none;")
+                .addEvent("keydown", function (e) {
+                    app.focusedLine = e.target;
+                    if (e.keyCode == 13 || e.keyCode == 10) {
+                        app.processLine(app.focusedLine.value);
+
+                        if (app.focusedLine.nextElementSibling == null) {
+                            app.newLine();
+                        }
+                        app.focusedLine.nextElementSibling.focus();
+                    } else if (e.keyCode == 38) {
+                        let q = e.target.previousElementSibling;
+                        if (q != null) q.focus();
+                    } else if (e.keyCode == 40) {
+                        let q = e.target.nextElementSibling;
+                        if (q != null) q.focus();
+                    }
+
+                })
+                .addEvent("mousedown", function (e) {
+                    app.focusedLine = e.target;
+                })
+
+        )
+        return app;
+    }
+
+    app.run = function () {
+
+        if (params === undefined) params = {};
+        if (params["width"] === undefined) params["width"] = 400;
+        if (params["height"] === undefined) params["height"] = 300;
+
+        //Hacemos la ventana
+        app.window = new KDWindow()
+            .show()
+            .center()
+            .setSize(params["width"], params["height"])
+            .setTitle("Terminal");
+
+        app.newLine();
+
+        return app;
+    }
+
+    return app;
+}
+
+function KDConsoleApplication(params) {
+    let app = new KDApplication({ name: "console" });
+
+    app.run = function (args) {
+        console.log(args);
+        return app;
+    }
+    return app;
+}
