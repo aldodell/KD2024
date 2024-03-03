@@ -1,7 +1,9 @@
 
 
 /**
- * Useful framework KD object
+ * 
+ * 
+ * @constant {Object} KD Useful framework KD object
  */
 const KD = {
     version: "0.1.0",
@@ -16,6 +18,7 @@ const KD = {
 
 
 /*
+
 Master class of all objects`s
 */
 class KDObject {
@@ -59,34 +62,47 @@ class KDObject {
  * Base class of all components.
  */
 class KDComponent extends KDObject {
+    /**
+     * Constructor for creating a new KDVisualComponent.
+     *
+     * @param {Object} params - The parameters for initializing the component.
+     * @return {KDVisualComponent} The newly created KDVisualComponent.
+     */
     constructor(params) {
         super(params);
 
         /**
+         * @description The DOM element of the component
          * @type {HTMLElement}
          */
         this.domElement = null;
 
         /**
+         * @description The HTML element's name of the component
          * @type {string}
          */
         this.htmlElement = "div";
+
         /**
+         * @description The HTML element's type of the component
          * @type {string} 
          */
         this.htmlType = null;
 
         /**
+         * @description The name of the field, which is used to store the value of the component
          * @type {String} 
          */
         this.field = null;
 
         /**
+         * @description The CSS text of the component
          * @type {String} 
          */
         this.cssText = "";
 
         /**
+         * @description The value of the component
          * @type {any}
          */
         this.value = undefined;
@@ -97,8 +113,14 @@ class KDComponent extends KDObject {
          */
         this.isBuilt = false;
 
+        /**
+         * @description The events array of the component
+         * @type {Array}
+         */
         this.events = [];
 
+
+        //Proccess the params
         if (params !== undefined) {
             for (let param in params) {
                 this[param] = params[param];
@@ -106,7 +128,13 @@ class KDComponent extends KDObject {
         }
 
 
+        //Subclassing the clone method
         this.KDObjectClone = this.clone;
+        /**
+         * Clones the current object.
+         *
+         * @return {KDComponent} The KDComponent cloned object.
+         */
         this.clone = function () {
             let obj = this.KDObjectClone();
 
@@ -119,8 +147,8 @@ class KDComponent extends KDObject {
         }
 
         /**
-         * 
-         * @param {*} value Set the value of the component.
+         * @description Set the value of the component
+         * @param {*} value 
          */
         this.setValue = function (value) {
             this.value = value;
@@ -132,16 +160,16 @@ class KDComponent extends KDObject {
         }
 
         /**
-         * 
-         * @returns {any} Get the value of the component.
+         * @description Get the value of the component
+         * @returns {any} 
          */
         this.getValue = function () {
             if (this.isBuilt) { return this.domElement.value; } else { return this.value }
         }
 
         /**
-         * 
-         * @returns {KDVisualComponent} Build the component.
+         * @description Build the component
+         * @returns {KDVisualComponent}
          */
         this.build = function () {
             //Create element
@@ -167,6 +195,14 @@ class KDComponent extends KDObject {
             return this;
         }
 
+        /**
+         * Adds an event and its associated action to the events object. If the widget is already built,
+         * it also adds the event listener to the DOM element.
+         *
+         * @param {string} event - The name of the event.
+         * @param {function} action - The action to be associated with the event.
+         * @return {KDComponent} - The current object instance.
+         */
         this.addEvent = function (event, action) {
             this.events[event] = action;
             if (this.isBuilt) {
@@ -177,6 +213,12 @@ class KDComponent extends KDObject {
             return this;
         }
 
+        /**
+         * Set the ID of the element and update the DOM if the element is already built.
+         *
+         * @param {type} id - The new ID to set
+         * @return {KDComponent} this - The instance for method chaining
+         */
         this.setId = function (id) {
             this.id = id;
             if (this.isBuilt) {
@@ -191,12 +233,25 @@ class KDComponent extends KDObject {
  * Base class of all visual components.
  */
 class KDVisualComponent extends KDComponent {
+    /**
+     * Constructor for initializing the visual component with default width and height.
+     *
+     * @param {Object} params - parameters for initialization
+     */
     constructor(params) {
         super(params);
 
 
-        this.width = "300px";
-        this.height = "200px";
+        /**
+         * @description The width of the component
+         * @type {int}
+         */
+        this.width = 300;
+        /** 
+         *  @description The height of the component
+         * @type {int}
+         */
+        this.height = 200;
 
 
         this.appendStyle = function (property, value) {
@@ -217,8 +272,16 @@ class KDVisualComponent extends KDComponent {
 
         this.KDComponentBuild = this.build;
 
+        /**
+         * Builds the component and sets its width, height, cssText, and value.
+         *
+         * @return {KDVisualComponent} The built component
+         */
         this.build = function () {
             this.KDComponentBuild();
+
+            if (!isNaN(this.width)) this.width = this.width + "px";
+            if (!isNaN(this.height)) this.height = this.height + "px";
 
             this.domElement.style.width = this.width;
             this.domElement.style.height = this.height;
@@ -235,6 +298,12 @@ class KDVisualComponent extends KDComponent {
 
 
 
+        /**
+         * Show the component on the surface.
+         *
+         * @param {Object} component - the component to be shown
+         * @return {KDVisualComponent} - the modified object
+         */
         this.show = function (component) {
 
             if (!this.isBuilt) {
@@ -251,6 +320,11 @@ class KDVisualComponent extends KDComponent {
             return this;
         }
 
+        /**
+         * Bring the element to the front if it is built.
+         *
+         * @return {Object} The current object
+         */
         this.bringToFront = function () {
             if (this.isBuilt) {
                 this.domElement.style.zIndex++;
@@ -258,6 +332,11 @@ class KDVisualComponent extends KDComponent {
             return this;
         }
 
+        /**
+         * Pushes the element to the back by decreasing its z-index if it's built.
+         *
+         * @return {Object} The current object for method chaining.
+         */
         this.pushToBack = function () {
             if (this.isBuilt) {
                 let z = this.domElement.style.zIndex;
@@ -305,6 +384,13 @@ class KDVisualComponent extends KDComponent {
         }
 
 
+        /**
+         * Sets the size of the element.
+         *
+         * @param {number|string} width - The width of the element in pixels or as a string with units.
+         * @param {number|string} height - The height of the element in pixels or as a string with units.
+         * @return {KDVisualComponent} - Returns the current object for method chaining.
+         */
         this.setSize = function (width, height) {
 
             if (!isNaN(width)) width = width + "px";
@@ -320,6 +406,11 @@ class KDVisualComponent extends KDComponent {
             return this;
         }
 
+        /**
+         * Centers the element on the surface.
+         *
+         * @return {KDVisualComponent} The current object for chaining.
+         */
         this.center = function () {
             if (this.isBuilt) {
                 this.appendStyle("position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);");
@@ -334,21 +425,30 @@ class KDVisualComponent extends KDComponent {
  * Base class of all visual components whose contains other components.
  */
 class KDVisualComponentContainer extends KDVisualComponent {
+    /**
+     * Constructor method for creating a new instance of the class.
+     *
+     * @param {params} params - The parameters for the constructor
+     * @return {KDVisualComponentContainer} The newly created instance
+     */
     constructor(params) {
         super(params);
 
-        /** Components collection */
+        /** 
+         * @description Components collection
+         * */
         this.components = [];
 
         /**
-         * @description Texto CSS para los elementos internos del contenedor 
+         * @description The CSS text for the children of the component
          * @type {string} 
          */
         this.cssTextForChildren = ";";
 
 
         /**
-         * Lista de componentes que se agregaran al contenedor
+         * 
+         * @description Appends the components
          * @param {KDVisualComponent}  
          * */
         this.append = function (components) {

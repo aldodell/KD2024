@@ -28,7 +28,7 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>KDComponent<span class="signature">()</span><span class="type-signature"></span></h2>
+        <h2><span class="attribs"><span class="type-signature"></span></span>KDComponent<span class="signature">(params)</span><span class="type-signature"> &rarr; {<a href="KDVisualComponent.html">KDVisualComponent</a>}</span></h2>
         
             <div class="class-description">Base class of all components.</div>
         
@@ -45,19 +45,72 @@
     
 
     
-    <h4 class="name" id="KDComponent"><span class="type-signature"></span>new KDComponent<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="KDComponent"><span class="type-signature"></span>new KDComponent<span class="signature">(params)</span><span class="type-signature"> &rarr; {<a href="KDVisualComponent.html">KDVisualComponent</a>}</span></h4>
     
 
     
 
 
 
+<div class="description">
+    Constructor for creating a new KDVisualComponent.
+</div>
 
 
 
 
 
 
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>params</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The parameters for initializing the component.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -93,7 +146,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="KD2024.js.html">KD2024.js</a>, <a href="KD2024.js.html#line61">line 61</a>
+        <a href="KD2024.js.html">KD2024.js</a>, <a href="KD2024.js.html#line64">line 64</a>
     </li></ul></dd>
     
 
@@ -118,6 +171,28 @@
 
 
 
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The newly created KDVisualComponent.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="KDVisualComponent.html">KDVisualComponent</a></span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -147,6 +222,10 @@
 
 
 
+
+<div class="description">
+    The CSS text of the component
+</div>
 
 
 
@@ -193,7 +272,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="KD2024.js.html">KD2024.js</a>, <a href="KD2024.js.html#line87">line 87</a>
+        <a href="KD2024.js.html">KD2024.js</a>, <a href="KD2024.js.html#line102">line 102</a>
     </li></ul></dd>
     
 
@@ -215,6 +294,10 @@
 
 
 
+
+<div class="description">
+    The DOM element of the component
+</div>
 
 
 
@@ -261,7 +344,79 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="KD2024.js.html">KD2024.js</a>, <a href="KD2024.js.html#line68">line 68</a>
+        <a href="KD2024.js.html">KD2024.js</a>, <a href="KD2024.js.html#line78">line 78</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="events"><span class="type-signature"></span>events<span class="type-signature"> :Array</span></h4>
+
+
+
+
+<div class="description">
+    The events array of the component
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Array</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="KD2024.js.html">KD2024.js</a>, <a href="KD2024.js.html#line120">line 120</a>
     </li></ul></dd>
     
 
@@ -283,6 +438,10 @@
 
 
 
+
+<div class="description">
+    The name of the field, which is used to store the value of the component
+</div>
 
 
 
@@ -329,7 +488,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="KD2024.js.html">KD2024.js</a>, <a href="KD2024.js.html#line82">line 82</a>
+        <a href="KD2024.js.html">KD2024.js</a>, <a href="KD2024.js.html#line96">line 96</a>
     </li></ul></dd>
     
 
@@ -352,6 +511,10 @@
 
 
 
+<div class="description">
+    The HTML element's name of the component
+</div>
+
 
 
     <h5>Type:</h5>
@@ -397,7 +560,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="KD2024.js.html">KD2024.js</a>, <a href="KD2024.js.html#line73">line 73</a>
+        <a href="KD2024.js.html">KD2024.js</a>, <a href="KD2024.js.html#line84">line 84</a>
     </li></ul></dd>
     
 
@@ -420,6 +583,10 @@
 
 
 
+<div class="description">
+    The HTML element's type of the component
+</div>
+
 
 
     <h5>Type:</h5>
@@ -465,7 +632,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="KD2024.js.html">KD2024.js</a>, <a href="KD2024.js.html#line77">line 77</a>
+        <a href="KD2024.js.html">KD2024.js</a>, <a href="KD2024.js.html#line90">line 90</a>
     </li></ul></dd>
     
 
@@ -537,7 +704,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="KD2024.js.html">KD2024.js</a>, <a href="KD2024.js.html#line98">line 98</a>
+        <a href="KD2024.js.html">KD2024.js</a>, <a href="KD2024.js.html#line114">line 114</a>
     </li></ul></dd>
     
 
@@ -559,6 +726,10 @@
 
 
 
+
+<div class="description">
+    The value of the component
+</div>
 
 
 
@@ -605,7 +776,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="KD2024.js.html">KD2024.js</a>, <a href="KD2024.js.html#line92">line 92</a>
+        <a href="KD2024.js.html">KD2024.js</a>, <a href="KD2024.js.html#line108">line 108</a>
     </li></ul></dd>
     
 
@@ -633,12 +804,199 @@
     
 
     
+    <h4 class="name" id="addEvent"><span class="type-signature"></span>addEvent<span class="signature">(event, action)</span><span class="type-signature"> &rarr; {<a href="KDComponent.html">KDComponent</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Adds an event and its associated action to the events object. If the widget is already built,
+it also adds the event listener to the DOM element.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>event</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The name of the event.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>action</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The action to be associated with the event.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="KD2024.js.html">KD2024.js</a>, <a href="KD2024.js.html#line206">line 206</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    - The current object instance.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="KDComponent.html">KDComponent</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
     <h4 class="name" id="build"><span class="type-signature"></span>build<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="KDVisualComponent.html">KDVisualComponent</a>}</span></h4>
     
 
     
 
 
+
+<div class="description">
+    Build the component
+</div>
 
 
 
@@ -681,7 +1039,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="KD2024.js.html">KD2024.js</a>, <a href="KD2024.js.html#line146">line 146</a>
+        <a href="KD2024.js.html">KD2024.js</a>, <a href="KD2024.js.html#line174">line 174</a>
     </li></ul></dd>
     
 
@@ -709,10 +1067,6 @@
 <h5>Returns:</h5>
 
         
-<div class="param-desc">
-    Build the component.
-</div>
-
 
 
 <dl>
@@ -739,12 +1093,16 @@
     
 
     
-    <h4 class="name" id="getValue"><span class="type-signature"></span>getValue<span class="signature">()</span><span class="type-signature"> &rarr; {any}</span></h4>
+    <h4 class="name" id="clone"><span class="type-signature"></span>clone<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="KDComponent.html">KDComponent</a>}</span></h4>
     
 
     
 
 
+
+<div class="description">
+    Clones the current object.
+</div>
 
 
 
@@ -816,9 +1174,115 @@
 
         
 <div class="param-desc">
-    Get the value of the component.
+    The KDComponent cloned object.
 </div>
 
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="KDComponent.html">KDComponent</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getValue"><span class="type-signature"></span>getValue<span class="signature">()</span><span class="type-signature"> &rarr; {any}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Get the value of the component
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="KD2024.js.html">KD2024.js</a>, <a href="KD2024.js.html#line166">line 166</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
 
 
 <dl>
@@ -845,12 +1309,175 @@
     
 
     
+    <h4 class="name" id="setId"><span class="type-signature"></span>setId<span class="signature">(id)</span><span class="type-signature"> &rarr; {<a href="KDComponent.html">KDComponent</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Set the ID of the element and update the DOM if the element is already built.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">type</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The new ID to set</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="KD2024.js.html">KD2024.js</a>, <a href="KD2024.js.html#line222">line 222</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    this - The instance for method chaining
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="KDComponent.html">KDComponent</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
     <h4 class="name" id="setValue"><span class="type-signature"></span>setValue<span class="signature">(value)</span><span class="type-signature"></span></h4>
     
 
     
 
 
+
+<div class="description">
+    Set the value of the component
+</div>
 
 
 
@@ -901,7 +1528,7 @@
 
             
 
-            <td class="description last">Set the value of the component.</td>
+            <td class="description last"></td>
         </tr>
 
     
@@ -942,7 +1569,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="KD2024.js.html">KD2024.js</a>, <a href="KD2024.js.html#line125">line 125</a>
+        <a href="KD2024.js.html">KD2024.js</a>, <a href="KD2024.js.html#line153">line 153</a>
     </li></ul></dd>
     
 
@@ -994,7 +1621,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Sun Mar 03 2024 09:10:38 GMT-0400 (Venezuela Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Sun Mar 03 2024 09:27:59 GMT-0400 (Venezuela Time)
 </footer>
 
 <script> prettyPrint(); </script>
