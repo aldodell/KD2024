@@ -33,33 +33,97 @@
         };
 
 
-        KDList({ cssText: "border:1px dashed black; background-color:lightgray; width:fit-content; padding:10px; border-radius:10px; position:fixed;" }).append(
-            KDRow({
-                events:
-                {
-                    mouseover: function () { this.kd.appendChildrenStyle("background-color", "gold") },
-                    mouseout: function () { this.kd.appendChildrenStyle("background-color", "white") }
-                }
-            },
-            ).append(
-                KDInputText({ field: "marca", cssText: "width:fit-content" }),
-                KDInputText({ field: "modelo" }),
-                KDInputSearch({ field: "año" }),
-            )
-        )
-            .setData(datos2.data)
-            .bringToFront()
-            .show();
-
-
-
         KDWindow()
+        .appendStyle("width:fit-content; height:fit-content;")
+            .append(
+                KDList({ cssText: "border:1px dashed black; background-color:lightgray; width:fit-content; padding:10px; border-radius:10px; " }).append(
+                    KDRow({
+                        events:
+                        {
+                            mouseover: function () { this.kd.appendChildrenStyle("background-color", "gold") },
+                            mouseout: function () { this.kd.appendChildrenStyle("background-color", "white") }
+                        }
+                    },
+                    ).append(
+                        KDInputText({ field: "marca", cssText: "width:fit-content" }),
+                        KDInputText({ field: "modelo" }),
+                        KDInputSearch({ field: "año" }),
+                    )
+                )
+                    .setData(datos2.data)
+                    .bringToFront()
+
+            )
+            .show()
+
+
+
+
+
+        let win = KDWindow()
             .setTitle("Título")
             .append(
                 KDInputButton()
                     .setValue("Hola mundo")
+                    .addEvent("click", function () { win.setSize(600, 300) })
             )
-            .show();
+            .show()
+
+
+
+        KDWindow()
+            .setTitle("Calculadora")
+            .append(
+                KDRow()
+                    .append(
+                        KDInputText()
+                            .setId("result")
+                    ),
+                KDRow()
+                    .append(
+                        KDInputButton().setValue("7"),
+                        KDInputButton().setValue("8"),
+                        KDInputButton().setValue("9"),
+                        KDInputButton().setValue("+"),
+
+                    ),
+                KDRow()
+                    .append(
+                        KDInputButton().setValue("4"),
+                        KDInputButton().setValue("5"),
+                        KDInputButton().setValue("6"),
+                        KDInputButton().setValue("-"),
+
+                    ),
+                KDRow()
+                    .append(
+                        KDInputButton().setValue("1"),
+                        KDInputButton().setValue("2"),
+                        KDInputButton().setValue("3"),
+                        KDInputButton().setValue("*"),
+
+                    ),
+            )
+            .build()
+            .show()
+            .forBody(function (body) {
+
+                let result = body.components[0].components[0];
+
+                for (let i = 1; i < body.components.length; i++) {
+                    row = body.components[i];
+                    for (let j = 0; j < row.components.length - 1; j++) {
+                        let button = row.components[j];
+                        button.addEvent("click", function () {
+                            result.setValue(result.getValue() + button.getValue());
+                        })
+                    }
+                }
+
+
+            })
+            .center();
+
 
 
 

@@ -41,6 +41,8 @@ class KDObject {
             return obj;
         }
 
+
+
     }
 }
 
@@ -116,6 +118,8 @@ class KDComponent extends KDObject {
             if (this.isBuilt) {
                 this.domElement.value = value;
             }
+
+            return this;
         }
 
         /**
@@ -163,6 +167,14 @@ class KDComponent extends KDObject {
             }
             return this;
         }
+
+        this.setId = function (id) {
+            this.id = id;
+            if (this.isBuilt) {
+                this.domElement.setAttribute("id", this.id);
+            }
+            return this;
+        }
     }
 }
 
@@ -172,6 +184,12 @@ class KDComponent extends KDObject {
 class KDVisualComponent extends KDComponent {
     constructor(params) {
         super(params);
+
+
+        this.width = "300px";
+        this.height = "200px";
+
+
         this.appendStyle = function (property, value) {
 
             if (this.cssText === null) {
@@ -192,6 +210,10 @@ class KDVisualComponent extends KDComponent {
 
         this.build = function () {
             this.KDComponentBuild();
+
+            this.domElement.style.width = this.width;
+            this.domElement.style.height = this.height;
+
             if (this.cssText !== null) {
                 this.domElement.style.cssText = this.cssText;
             }
@@ -244,7 +266,7 @@ class KDVisualComponent extends KDComponent {
          * @param {*} pointer Component that will receive the drag action from mouse.
          * @param {*} movable  Component that will be moved
          */
-        this.draggable = function (pointer, movable) {
+        this.makeDraggable = function (pointer, movable) {
 
             if (movable === undefined) {
                 movable = pointer;
@@ -254,8 +276,11 @@ class KDVisualComponent extends KDComponent {
                 let rect = pointer.domElement.getBoundingClientRect();
                 movable.dragX = event.clientX - rect.x;
                 movable.dragY = event.clientY - rect.y;
+                pointer.domElement.style.cursor = "grab";
+               
 
                 movable.domElement.onmousemove = function (event) {
+                    movable.domElement.style.transform = null;
                     movable.domElement.style.left = event.clientX - movable.dragX + "px";
                     movable.domElement.style.top = event.clientY - movable.dragY + "px";
                 }
@@ -263,6 +288,7 @@ class KDVisualComponent extends KDComponent {
                 movable.domElement.onmouseup = function () {
                     movable.domElement.onmousemove = null;
                     movable.domElement.onmouseup = null;
+                    pointer.domElement.style.cursor = "auto";
 
                 };
 
@@ -270,6 +296,27 @@ class KDVisualComponent extends KDComponent {
         }
 
 
+        this.setSize = function (width, height) {
+
+            if (!isNaN(width)) width = width + "px";
+            if (!isNaN(height)) height = height + "px";
+
+            this.width = width;
+            this.height = height;
+
+            if (this.isBuilt) {
+                this.domElement.style.width = width;
+                this.domElement.style.height = height;
+            }
+            return this;
+        }
+
+        this.center = function () {
+            if (this.isBuilt) {
+                this.appendStyle("position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);");
+            }
+            return this;
+        }
 
     }
 }
@@ -377,6 +424,12 @@ class KDVisualComponentContainer extends KDVisualComponent {
             return this;
         }
 
+        /**
+         * This code snippet defines a function setValueDeeply that recursively sets values on a component and its nested components based on a JSON object. If the component has nested components, it iterates through them and calls setValueDeeply recursively. If there are no nested components, it sets the value of the component based on the JSON object. Finally, it returns the current context (this).
+         * @param {*} component 
+         * @param {*} json 
+         * @returns 
+         */
         this.setValueDeeply = function (component, json) {
 
             if (component.components !== undefined) {
@@ -402,7 +455,12 @@ class KDVisualComponentContainer extends KDVisualComponent {
         }
 
 
-
+        /**
+         * This code snippet defines a method appendChildrenStyle that adds a CSS property and value to the cssTextForChildren property. It then iterates through the components array, adding the cssTextForChildren to each component's cssText property and updating the DOM element's style if the component is already built. Finally, it returns the current object.
+         * @param {*} property 
+         * @param {*} value 
+         * @returns 
+         */
         this.appendChildrenStyle = function (property, value) {
 
             if (this.cssTextForChildren === null) {
@@ -421,6 +479,27 @@ class KDVisualComponentContainer extends KDVisualComponent {
                 }
             }
 
+            return this;
+        }
+
+
+        this.forEachComponent = function (callback) {
+            for (let i = 0; i < this.components.length; i++) {
+                callback(this.components[i]);
+            }
+
+            return this;
+        }
+
+        this.forComponentById = function (id, callback) {
+            for (let i = 0; i < this.components.length; i++) {
+                let comp = this.components[i];
+                if (comp.id === id) {
+                    callback(comp);
+                } else if (comp instanceof KDVisualComponentContainer) {
+                    comp.forComponentById(id, callback);
+                }
+            }
             return this;
         }
     }
@@ -684,9 +763,9 @@ function KDScreen(params) {
 function KDWindowTheme(params) {
     let obj = new KDObject(params);
 
-    obj.frameStyle = "position:absolute; top:0; left:0; width:200px; height:200px; border:4px solid Gray; background-color:LightCyan;";
-    obj.headStyle = "position:absolute; top:0; left:0; width:100%; height:32px;  text-align:center; padding-top:8px;color:white; ";
-    obj.bodyStyle = "position:absolute; top:32px; left:0; width:100%; height:calc(100% - 32px); background-color:LightCyan;";
+    obj.frameStyle = "position:absolute; top:0; left:0; width:200px; height:200px; background-color:LightCyan;";
+    obj.headStyle = "position:absolute; top:0; left:0; width:100%; height:32px; text-align:center; padding-top:8px;color:white; ";
+    obj.bodyStyle = "position:absolute; top:32px; left:0px; width:100%; height:100%; height:calc(100% - 32px);  background-color:LightCyan; overflow:scroll;";
     obj.footStyle = "position:absolute; bottom:0; left:0; width:100%; height:32px; background-color:DarkCyan;";
 
     return obj;
@@ -696,7 +775,7 @@ function KDWindowTheme(params) {
 function KDWindowThemeDefault(params) {
     let obj = new KDWindowTheme(params);
     obj.frameStyle += "background-color:DodgerBlue; border:4px solid Gray; border-radius:5px;";
-    obj.headStyle += "background-color:DodgerBlue; color:white;";
+    obj.headStyle += "background: linear-gradient(to right, #33ccff 18%, #ff99cc 100%); color:white;";
     obj.bodyStyle += "background-color:GhostWhite;";
     obj.footStyle += "background-color:RoyalBlue;";
     return obj;
@@ -713,64 +792,62 @@ function KDWindowThemeGold(params) {
 }
 
 
-
 function KDWindow(params) {
     let frame = new KDVisualComponentContainer(params);
     frame.htmlElement = "div";
     frame.theme = KDWindowThemeDefault();
     frame.title = "";
 
-    frame.head = new KDVisualComponentContainer(params);
-    frame.head.htmlElement = "div";
+    frame.title = "";
 
-    frame.body = new KDVisualComponentContainer(params);
-    frame.body.htmlElement = "div";
+    frame.append(KDLayer());
+    frame.append(KDLayer());
+    frame.append(KDLayer());
 
-    frame.foot = new KDVisualComponentContainer(params);
-    frame.foot.htmlElement = "div";
+    frame.head = frame.components[0];
+    frame.body = frame.components[1];
+    frame.foot = frame.components[2];
 
-    frame.append(frame.head);
-    frame.append(frame.body);
-    frame.append(frame.foot);
+    /**
+     * This code snippet defines a function forBody on the frame object, which takes a callback as an argument. Inside the function, it calls the callback with frame.body as the argument and then returns this.
+     * @param {*} callback 
+     * @returns 
+     */
+    frame.forBody = function (callback) {
+        callback(this.body);
+        return this;
+    }
+
+    frame.setTitle = function (title) {
+        this.title = title;
+        if (this.isBuilt) {
+            this.head.domElement.innerHTML = title;
+        }
+        return this;
+    }
 
     frame.applyTheme = function (theme) {
-        frame.appendStyle(theme.frameStyle);
-        frame.head.appendStyle(theme.headStyle);
-        frame.body.appendStyle(theme.bodyStyle);
-        frame.foot.appendStyle(theme.footStyle);
-        return frame;
+        this.appendStyle(theme.frameStyle);
+        this.head.appendStyle(theme.headStyle);
+        this.body.appendStyle(theme.bodyStyle);
+        this.foot.appendStyle(theme.footStyle);
+        return this;
     }
 
     frame.KDVisualComponentContainerBuild = frame.build;
 
     frame.build = function () {
-        this.KDVisualComponentContainerBuild();
-
-        //Apply theme
         this.applyTheme(KDWindowThemeDefault());
-
-        //Apply title
-        frame.head.domElement.innerText = this.title;
-
-        //Make window draggable
-        frame.draggable(frame.head, frame);
+        this.KDVisualComponentContainerBuild();
+        this.setTitle(this.title);
+        this.makeDraggable(this.head, this);
 
         return this;
     }
 
-
-    frame.setTitle = function (title) {
-        frame.title = title;
-        if (frame.isBuilt) {
-            frame.head.domElement.innerText = title;
-        }
-        return frame;
-    }
-
-
-    frame.append = function (components) {
+    frame.append = function () {
         for (let i = 0; i < arguments.length; i++) {
-            frame.body.append(arguments[i]);
+            this.body.append(arguments[i]);
         }
         return this;
     }
@@ -778,4 +855,6 @@ function KDWindow(params) {
 
     return frame;
 }
+
+
 
