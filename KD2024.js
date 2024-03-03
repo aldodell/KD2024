@@ -254,6 +254,13 @@ class KDVisualComponent extends KDComponent {
         this.height = 200;
 
 
+        /**
+         * Append a style property and value to the cssText, and update the domElement style if the object is already built.
+         *
+         * @param {string} property - The CSS property to be added.
+         * @param {string} value - The value of the CSS property.
+         * @return {object} - The object itself for chaining.
+         */
         this.appendStyle = function (property, value) {
 
             if (this.cssText === null) {
@@ -268,6 +275,30 @@ class KDVisualComponent extends KDComponent {
 
             return this;
         }
+
+        /**
+         * Appends the given CSS text to the existing CSS text of the element and updates the element's style if it's built.
+         *
+         * @param {string} cssText - The CSS text to append
+         * @return {Object} - The updated object
+         */
+        this.appendStyleCssText = function (cssText) {
+
+            if (this.cssText === null) {
+                this.cssText = "";
+            }
+
+            this.cssText += cssText+ ";";
+
+            if (this.isBuilt) {
+                this.domElement.style.cssText = this.cssText;
+            }
+
+            return this;
+        }
+
+
+
 
 
         this.KDComponentBuild = this.build;
@@ -911,7 +942,7 @@ function KDWindowThemeDefault(params) {
     let obj = new KDWindowTheme(params);
     obj.frameStyle += "background-color:DodgerBlue; border:4px solid Gray; border-radius:5px;";
     obj.headStyle += "background: linear-gradient(to right, #33ccff 18%, #ff99cc 100%); color:white;";
-    obj.bodyStyle += "background-color:GhostWhite;";
+    obj.bodyStyle += "background-color: GhostWhite;";
     obj.footStyle += "background: linear-gradient(to right, #33ccff 18%, #ff99cc 100%);";
     return obj;
 }
