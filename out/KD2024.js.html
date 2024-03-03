@@ -1,4 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: KD2024.js</title>
 
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: KD2024.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>
 
 /**
  * Useful framework KD object
@@ -277,7 +305,7 @@ class KDVisualComponent extends KDComponent {
                 movable.dragX = event.clientX - rect.x;
                 movable.dragY = event.clientY - rect.y;
                 pointer.domElement.style.cursor = "grab";
-
+               
 
                 movable.domElement.onmousemove = function (event) {
                     movable.domElement.style.transform = null;
@@ -341,7 +369,7 @@ class KDVisualComponentContainer extends KDVisualComponent {
          * @param {KDVisualComponent}  components Lista de componentes que se agregaran al contenedor
          * */
         this.append = function (components) {
-            for (let i = 0; i < arguments.length; i++) {
+            for (let i = 0; i &lt; arguments.length; i++) {
                 let comp = arguments[i];
 
                 if (this.isBuilt) {
@@ -368,7 +396,7 @@ class KDVisualComponentContainer extends KDVisualComponent {
          * Finally, it returns the current object. 
          */
         this.setValueByField = function (field, value) {
-            for (let i = 0; i < this.components.length; i++) {
+            for (let i = 0; i &lt; this.components.length; i++) {
                 let comp = this.components[i];
                 if (comp.field === field) {
                     comp.setValue(value);
@@ -384,7 +412,7 @@ class KDVisualComponentContainer extends KDVisualComponent {
          * @returns 
          */
         this.setData = function (json) {
-            for (let i = 0; i < this.components.length; i++) {
+            for (let i = 0; i &lt; this.components.length; i++) {
                 let comp = this.components[i];
                 if (json[comp.field] !== undefined) {
                     if (comp instanceof KDVisualComponentContainer) {
@@ -402,7 +430,7 @@ class KDVisualComponentContainer extends KDVisualComponent {
 
         this.build = function () {
             this.KDVisualComponentBuild();
-            for (let i = 0; i < this.components.length; i++) {
+            for (let i = 0; i &lt; this.components.length; i++) {
                 let comp = this.components[i];
                 comp.cssText += this.cssTextForChildren;
                 if (comp.domElement === null || !comp.isBuilt) {
@@ -433,7 +461,7 @@ class KDVisualComponentContainer extends KDVisualComponent {
         this.setValueDeeply = function (component, json) {
 
             if (component.components !== undefined) {
-                for (let i = 0; i < component.components.length; i++) {
+                for (let i = 0; i &lt; component.components.length; i++) {
                     this.setValueDeeply(component.components[i], json);
                 }
             } else {
@@ -447,7 +475,7 @@ class KDVisualComponentContainer extends KDVisualComponent {
         this.clone = function () {
             let obj = this.KDVisualComponentClone();
             obj.components = [];
-            for (let i = 0; i < this.components.length; i++) {
+            for (let i = 0; i &lt; this.components.length; i++) {
                 let comp = this.components[i];
                 obj.components.push(comp.clone());
             }
@@ -469,7 +497,7 @@ class KDVisualComponentContainer extends KDVisualComponent {
 
             this.cssTextForChildren += property + ":" + value + ";";
 
-            for (let i = 0; i < this.components.length; i++) {
+            for (let i = 0; i &lt; this.components.length; i++) {
 
                 let comp = this.components[i];
                 comp.cssText += this.cssTextForChildren;
@@ -490,7 +518,7 @@ class KDVisualComponentContainer extends KDVisualComponent {
          * @return {object} this
          */
         this.forEachComponent = function (callback) {
-            for (let i = 0; i < this.components.length; i++) {
+            for (let i = 0; i &lt; this.components.length; i++) {
                 callback(this.components[i]);
             }
 
@@ -505,7 +533,7 @@ class KDVisualComponentContainer extends KDVisualComponent {
          * @return {Object} - The current object
          */
         this.forComponentById = function (id, callback) {
-            for (let i = 0; i < this.components.length; i++) {
+            for (let i = 0; i &lt; this.components.length; i++) {
                 let comp = this.components[i];
                 if (comp.id === id) {
                     callback(comp);
@@ -595,7 +623,7 @@ function KDList(params) {
      * Fill the list with data, creating a component for each item in the data array.
      */
     obj.fill = function () {
-        for (let i = 0; i < this.data.length; i++) {
+        for (let i = 0; i &lt; this.data.length; i++) {
             const comps = this.componentsTemplate.clone();
             comps.setValueDeeply(comps, this.data[i]);
             if (comps.isBuilt == false) { comps.build(); };
@@ -789,8 +817,8 @@ function KDWindowTheme(params) {
     let obj = new KDObject(params);
 
     obj.frameStyle = "position:absolute; top:0; left:0; width:200px; height:200px; background-color:LightCyan;";
-    obj.headStyle = "position:absolute; top:0; left:0; width:100%; height:32px; text-align:center; padding-top:8px;color:white;";
-    obj.bodyStyle = "position:absolute; top:32px; left:0px; width:100%; height:100%; height:calc(100% - 32px);background-color:LightCyan; overflow:scroll;";
+    obj.headStyle = "position:absolute; top:0; left:0; width:100%; height:32px; text-align:center; padding-top:8px;color:white; ";
+    obj.bodyStyle = "position:absolute; top:32px; left:0px; width:100%; height:100%; height:calc(100% - 32px);  background-color:LightCyan; overflow:scroll;";
     obj.footStyle = "position:absolute; bottom:0; left:0; width:100%; height:32px; background-color:DarkCyan;";
 
     return obj;
@@ -802,15 +830,15 @@ function KDWindowThemeDefault(params) {
     obj.frameStyle += "background-color:DodgerBlue; border:4px solid Gray; border-radius:5px;";
     obj.headStyle += "background: linear-gradient(to right, #33ccff 18%, #ff99cc 100%); color:white;";
     obj.bodyStyle += "background-color:GhostWhite;";
-    obj.footStyle += "background: linear-gradient(to right, #33ccff 18%, #ff99cc 100%);";
+    obj.footStyle += "background-color:RoyalBlue;";
     return obj;
 }
 
 
 function KDWindowThemeGold(params) {
     let obj = new KDWindowTheme(params);
-    obj.frameStyle += "background-color:Blue;";
-    obj.headStyle += "background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab); color:white;";
+    obj.frameStyle += "border:3px dotted Gold;background-color:Blue;";
+    obj.headStyle += "background-color:DarkCyan;color:Black;";
     obj.bodyStyle += "background-color:Gold;";
     obj.footStyle += "background-color:Gold;";
     return obj;
@@ -821,6 +849,8 @@ function KDWindow(params) {
     let frame = new KDVisualComponentContainer(params);
     frame.htmlElement = "div";
     frame.theme = KDWindowThemeDefault();
+    frame.title = "";
+
     frame.title = "";
 
     frame.append(KDLayer());
@@ -850,30 +880,26 @@ function KDWindow(params) {
     }
 
     frame.applyTheme = function (theme) {
-        this.theme = theme;
-        if (this.isBuilt) {
-            this.appendStyle(theme.frameStyle);
-            this.head.appendStyle(theme.headStyle);
-            this.body.appendStyle(theme.bodyStyle);
-            this.foot.appendStyle(theme.footStyle);
-        }
+        this.appendStyle(theme.frameStyle);
+        this.head.appendStyle(theme.headStyle);
+        this.body.appendStyle(theme.bodyStyle);
+        this.foot.appendStyle(theme.footStyle);
         return this;
     }
 
     frame.KDVisualComponentContainerBuild = frame.build;
 
     frame.build = function () {
-
+        this.applyTheme(KDWindowThemeDefault());
         this.KDVisualComponentContainerBuild();
         this.setTitle(this.title);
         this.makeDraggable(this.head, this);
-        this.applyTheme(this.theme);
 
         return this;
     }
 
     frame.append = function () {
-        for (let i = 0; i < arguments.length; i++) {
+        for (let i = 0; i &lt; arguments.length; i++) {
             this.body.append(arguments[i]);
         }
         return this;
@@ -885,3 +911,26 @@ function KDWindow(params) {
 
 
 
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="KDComponent.html">KDComponent</a></li><li><a href="KDVisualComponent.html">KDVisualComponent</a></li><li><a href="KDVisualComponentContainer.html">KDVisualComponentContainer</a></li></ul><h3>Global</h3><ul><li><a href="global.html#KD">KD</a></li><li><a href="global.html#KDColumn">KDColumn</a></li><li><a href="global.html#KDLayer">KDLayer</a></li><li><a href="global.html#KDList">KDList</a></li><li><a href="global.html#KDRow">KDRow</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Sat Mar 02 2024 22:33:59 GMT-0400 (Venezuela Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

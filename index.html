@@ -34,9 +34,9 @@
 
 
         KDWindow()
-        .appendStyle("width:fit-content; height:fit-content;")
+   
             .append(
-                KDList({ cssText: "border:1px dashed black; background-color:lightgray; width:fit-content; padding:10px; border-radius:10px; " }).append(
+                KDList({ cssText: "margin:10px; border:1px dashed black; background-color:lightgray; width:fit-content; padding:10px; border-radius:10px; " }).append(
                     KDRow({
                         events:
                         {
@@ -55,20 +55,8 @@
 
             )
             .show()
-
-
-
-
-
-        let win = KDWindow()
-            .setTitle("Título")
-            .append(
-                KDInputButton()
-                    .setValue("Hola mundo")
-                    .addEvent("click", function () { win.setSize(600, 300) })
-            )
-            .show()
-
+            .setSize(800, 300)
+      
 
 
         KDWindow()
@@ -124,10 +112,6 @@
             })
             .center();
 
-
-
-
-        // KDInputButton({value: "Pulsa"}).addEvent("click", function(){alert('hola')}).show();
 
 
     </script>
