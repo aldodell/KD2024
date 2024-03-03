@@ -929,7 +929,7 @@ function KDScreen(params) {
 function KDWindowTheme(params) {
     let obj = new KDObject(params);
 
-    obj.frameStyle = "position:absolute; top:0; left:0; width:200px; height:200px; background-color:LightCyan;";
+    obj.frameStyle = "position:absolute; top:0; left:0; width:200px; height:200px; background-color:LightCyan; box-shadow: 10px 10px 5px #888888;";
     obj.headStyle = "position:absolute; top:0; left:0; width:100%; height:32px; text-align:center; padding-top:8px;color:white;";
     obj.bodyStyle = "position:absolute; top:32px; left:0px; width:100%; height:100%; height:calc(100% - 32px);background-color:LightCyan; overflow:scroll;";
     obj.footStyle = "position:absolute; bottom:0; left:0; width:100%; height:32px; background-color:DarkCyan;";
@@ -967,10 +967,15 @@ function KDWindow(params) {
     frame.append(KDLayer());
     frame.append(KDLayer());
     frame.append(KDLayer());
+    frame.append(KDLayer());
 
     frame.head = frame.components[0];
     frame.body = frame.components[1];
     frame.foot = frame.components[2];
+    frame.superFrame = frame.components[3];
+
+    //Super frame is a Special Frame
+    frame.superFrame.cssText = "position:absolute; top:-20px; left: -20px; width:calc(100% + 40px); height:64px;";
 
     /**
      * This code snippet defines a function forBody on the frame object, which takes a callback as an argument. Inside the function, it calls the callback with frame.body as the argument and then returns this.
@@ -992,10 +997,10 @@ function KDWindow(params) {
     frame.applyTheme = function (theme) {
         this.theme = theme;
         if (this.isBuilt) {
-            this.appendStyle(theme.frameStyle);
-            this.head.appendStyle(theme.headStyle);
-            this.body.appendStyle(theme.bodyStyle);
-            this.foot.appendStyle(theme.footStyle);
+            this.appendStyleCssText(theme.frameStyle);
+            this.head.appendStyleCssText(theme.headStyle);
+            this.body.appendStyleCssText(theme.bodyStyle);
+            this.foot.appendStyleCssText(theme.footStyle);
         }
         return this;
     }
@@ -1006,7 +1011,7 @@ function KDWindow(params) {
 
         this.KDVisualComponentContainerBuild();
         this.setTitle(this.title);
-        this.makeDraggable(this.head, this);
+        this.makeDraggable(this.superFrame, this);
         this.applyTheme(this.theme);
 
         return this;
