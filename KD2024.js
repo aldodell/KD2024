@@ -19,10 +19,18 @@ const KD = {
 Master class of all objects`s
 */
 class KDObject {
+    /**
+     * A constructor for creating a new KDObject.
+     *
+     * @param {params} params - The parameters for creating the KDObject.
+     * @return {KDObject} Clone of the given KD object.
+     */
     constructor(params) {
 
+
         /**
-         * @type {string} ID Is a unique identifier used on the DOM and JS objects.
+         * ID Is a unique identifier used on the DOM and JS objects.
+         * @type {String}
          */
         this.id = KD.createId();
 
@@ -55,36 +63,37 @@ class KDComponent extends KDObject {
         super(params);
 
         /**
-         * @type {HTMLElement} Elemento DOM que se creara
+         * @type {HTMLElement}
          */
         this.domElement = null;
 
         /**
-         * @type {string} Tipo de elemento que se creara
+         * @type {string}
          */
         this.htmlElement = "div";
         /**
-         * @type {string} Tipo de elemento que se crea (Sub tipo)
+         * @type {string} 
          */
         this.htmlType = null;
 
         /**
-         * @type {String} Name field used for data syncronization.
+         * @type {String} 
          */
         this.field = null;
 
         /**
-         * @type {String} CSS text for the component.
+         * @type {String} 
          */
         this.cssText = "";
 
         /**
-         * @type {any} Value of the component.
+         * @type {any}
          */
         this.value = undefined;
 
         /**
-         * @type {boolean} If the component is built this property will be true.
+         * @description If the component is built this property will be true.   
+         * @type {boolean} 
          */
         this.isBuilt = false;
 
@@ -332,13 +341,15 @@ class KDVisualComponentContainer extends KDVisualComponent {
         this.components = [];
 
         /**
-         * @type {string} Texto CSS para los elementos internos del contenedor 
+         * @description Texto CSS para los elementos internos del contenedor 
+         * @type {string} 
          */
         this.cssTextForChildren = ";";
 
 
         /**
-         * @param {KDVisualComponent}  components Lista de componentes que se agregaran al contenedor
+         * Lista de componentes que se agregaran al contenedor
+         * @param {KDVisualComponent}  
          * */
         this.append = function (components) {
             for (let i = 0; i < arguments.length; i++) {
@@ -381,7 +392,7 @@ class KDVisualComponentContainer extends KDVisualComponent {
         /**
          * This code defines a method setData that takes a JSON object as input and sets the values of components based on the fields in the JSON object. If a field in the JSON object matches a field in a component, the value of that component is updated. Finally, it returns the object itself.
          * @param {*} json 
-         * @returns 
+         * 
          */
         this.setData = function (json) {
             for (let i = 0; i < this.components.length; i++) {
@@ -395,6 +406,7 @@ class KDVisualComponentContainer extends KDVisualComponent {
                 }
                 return this;
             }
+            return this
         }
 
         //Save build method from parent
@@ -428,7 +440,6 @@ class KDVisualComponentContainer extends KDVisualComponent {
          * This code snippet defines a function setValueDeeply that recursively sets values on a component and its nested components based on a JSON object. If the component has nested components, it iterates through them and calls setValueDeeply recursively. If there are no nested components, it sets the value of the component based on the JSON object. Finally, it returns the current context (this).
          * @param {*} component 
          * @param {*} json 
-         * @returns 
          */
         this.setValueDeeply = function (component, json) {
 
@@ -458,8 +469,7 @@ class KDVisualComponentContainer extends KDVisualComponent {
         /**
          * This code snippet defines a method appendChildrenStyle that adds a CSS property and value to the cssTextForChildren property. It then iterates through the components array, adding the cssTextForChildren to each component's cssText property and updating the DOM element's style if the component is already built. Finally, it returns the current object.
          * @param {*} property 
-         * @param {*} value 
-         * @returns 
+         * @param {*} value  
          */
         this.appendChildrenStyle = function (property, value) {
 
@@ -834,7 +844,6 @@ function KDWindow(params) {
     /**
      * This code snippet defines a function forBody on the frame object, which takes a callback as an argument. Inside the function, it calls the callback with frame.body as the argument and then returns this.
      * @param {*} callback 
-     * @returns 
      */
     frame.forBody = function (callback) {
         callback(this.body);
@@ -878,8 +887,6 @@ function KDWindow(params) {
         }
         return this;
     }
-
-
     return frame;
 }
 

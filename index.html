@@ -34,7 +34,7 @@
 
 
         KDWindow()
-   
+
             .append(
                 KDList({ cssText: "margin:10px; border:1px dashed black; background-color:lightgray; width:fit-content; padding:10px; border-radius:10px; " }).append(
                     KDRow({
@@ -56,7 +56,7 @@
             )
             .show()
             .setSize(800, 300)
-      
+
 
 
         KDWindow()
@@ -111,6 +111,19 @@
 
             })
             .center();
+
+
+
+
+
+        KDWindow()
+            .show()
+            .setTitle("Ventana de Aldito")
+            .append(
+                KDInputButton()
+                    .setValue("Pisa aqui")
+                    .addEvent("click", () => { alert("hola") })
+            )
 
 
 
