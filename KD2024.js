@@ -458,7 +458,7 @@ class KDVisualComponent extends KDComponent {
          */
         this.center = function () {
             if (this.isBuilt) {
-                this.appendStyle("position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);");
+                this.appendStyleCssText("position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);");
             }
             return this;
         }
@@ -990,7 +990,6 @@ function KDWindow(params) {
     frame.superFrame.cssText = "position:absolute; top:-20px; left: -20px; width:calc(100% + 40px); height:64px;";
 
 
-
     /**
      * This code snippet defines a function forBody on the frame object, which takes a callback as an argument. Inside the function, it calls the callback with frame.body as the argument and then returns this.
      * @param {*} callback 
@@ -1106,9 +1105,13 @@ function KDTerminalApplication(params) {
 
         let l = line.split(" ");
         let cmd = l[0];
-        let args = l.slice(1).join("");
+        let args = l.slice(1).join('');
+        let args2 = [];
+        for (let i = 0; i < args.length; i++) {
+            args2.push(args[i]);
+        }
 
-        KDApplicationManager().sendMessage(KDMessage({ "source": "terminal", "target": cmd, "data": args }));
+        KDApplicationManager().sendMessage(KDMessage({ "source": "terminal", "target": cmd, "data": args2 }));
 
         return app;
     }
@@ -1169,8 +1172,15 @@ function KDConsoleApplication(params) {
     let app = new KDApplication({ name: "console" });
 
     app.run = function (args) {
-        console.log(args);
         return app;
     }
+
+
+    app.processMesage = function (message) {
+        console.log(message.data);
+    }
+
     return app;
 }
+
+KDConsoleApplication().run();
