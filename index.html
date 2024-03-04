@@ -18,6 +18,24 @@
             .run();
 
 
+        let t = {
+            duration: 3000,
+            iterations: Infinity,
+        }
+
+        let ef = [
+            { transform: "rotate(0) translate3D(-50%, -50%, 0)", color: "#000" },
+            { color: "#431236", offset: 0.3 },
+            { transform: "rotate(360deg) translate3D(-50%, -50%, 0)", color: "#000" },
+        ];
+
+        KDLayer()
+            .appendStyleCssText("position:absolute; top:0px; left:0px; width:100px; height:100px;background-color:DarkCyan")
+            .appendStyleCssText("transform: translate3D(100px,100px,200px);")
+            .show()
+          //  .domElement.animate(ef, t);
+
+
         /*
                 var datos = {
                     data: [

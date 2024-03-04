@@ -463,6 +463,23 @@ class KDVisualComponent extends KDComponent {
             return this;
         }
 
+        /**
+         * Sets the visibility of the element based on the input.
+         *
+         * @param {boolean} yesOrNo - true to make the element visible, false to hide it
+         * @return {object} this - the object itself for chaining
+         */
+        this.setVisible = function (yesOrNo) {
+            if (this.isBuilt) {
+                if (yesOrNo) {
+                    this.domElement.style.visibility = "visible";
+                } else {
+                    this.domElement.style.visibility = "hidden";
+                }
+            }
+            return this;
+        }
+
     }
 }
 
@@ -684,6 +701,12 @@ function KDLayer(params) {
     let obj = new KDVisualComponentContainer(params);
     obj.htmlElement = "div";
     obj.cssTextForChildren += ";position:relative;";
+    obj.setValue = function (value) {
+        this.value = value;
+        if (this.isBuilt) {
+            this.domElement.innerText = this.value;
+        }
+    }
     return obj;
 }
 
@@ -929,6 +952,15 @@ function KDInputWeek(params) {
     return obj;
 }
 
+
+function KDHorizontalLine(params) {
+    let obj = new KDVisualComponent(params);
+    obj.htmlElement = "hr";
+    obj.cssText = "position:absolute; top:0; left:0; width:100%; height:1px; background-color:Gray;";
+    return obj;
+}
+
+
 function KDScreen(params) {
     let obj = new KDVisualComponentContainer(params);
     obj.htmlElement = "div";
@@ -982,7 +1014,7 @@ function KDWindow(params) {
     frame.append(KDLayer());
     frame.append(KDLayer());
     frame.append(KDLayer());
-    
+
 
     frame.head = frame.components[0];
     frame.body = frame.components[1];
@@ -994,7 +1026,16 @@ function KDWindow(params) {
     frame.superHead.cssText = "position:absolute; top:-20px; left: -20px; width:calc(100% + 40px); height:48px;";
 
     //Minimize Button
-    frame.minimizeButton.cssText = "position:absolute; top:1; right:1; width:30px; height:30px; background-color:Gray; border:1px solid Black;";
+    frame.minimizeButton.cssText = "position:absolute; top:1px; right:1px; width:30px; height:28px; border:1px solid Black;";
+    frame.minimizeButton.cssTextForChildren = "position:absolute;";
+    frame.minimizeButton.append(
+        KDHorizontalLine()
+            .appendStyleCssText("position:absolute; top:12px; left:2px; width:calc(100% - 6px); height:4px;")
+    );
+    frame.minimizeButton.addEvent("click", function () {
+        frame.setVisible(false);
+    })
+
 
     /**
      * This code snippet defines a function forBody on the frame object, which takes a callback as an argument. Inside the function, it calls the callback with frame.body as the argument and then returns this.
