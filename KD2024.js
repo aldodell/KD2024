@@ -938,12 +938,13 @@ function KDScreen(params) {
 }
 
 
+
 function KDWindowTheme(params) {
     let obj = new KDObject(params);
 
-    obj.frameStyle = "position:absolute; top:0; left:0; width:200px; height:200px; background-color:LightCyan; box-shadow: 10px 10px 5px #888888;";
+    obj.frameStyle = "position:absolute; top:0; left:0; width:200px; height:200px; box-shadow: 10px 10px 5px #888888;";
     obj.headStyle = "position:absolute; top:0; left:0; width:100%; height:32px; text-align:center; padding-top:8px;color:white;";
-    obj.bodyStyle = "position:absolute; top:32px; left:0px; width:100%; height:100%; height:calc(100% - 32px);background-color:LightCyan; overflow:scroll;";
+    obj.bodyStyle = "position:absolute; top:32px; left:0px; width:100%; height:100%; height:calc(100% - 64px); overflow:scroll;";
     obj.footStyle = "position:absolute; bottom:0; left:0; width:100%; height:32px; background-color:DarkCyan;";
 
     return obj;
@@ -954,7 +955,7 @@ function KDWindowThemeDefault(params) {
     let obj = new KDWindowTheme(params);
     obj.frameStyle += "background-color:DodgerBlue; border:4px solid Gray; border-radius:5px;";
     obj.headStyle += "background: linear-gradient(to right, #33ccff 18%, #ff99cc 100%); color:white;";
-    obj.bodyStyle += "background-color: GhostWhite;";
+    obj.bodyStyle += "background-color:white;";
     obj.footStyle += "background: linear-gradient(to right, #33ccff 18%, #ff99cc 100%);";
     return obj;
 }
@@ -980,15 +981,20 @@ function KDWindow(params) {
     frame.append(KDLayer());
     frame.append(KDLayer());
     frame.append(KDLayer());
+    frame.append(KDLayer());
+    
 
     frame.head = frame.components[0];
     frame.body = frame.components[1];
     frame.foot = frame.components[2];
-    frame.superFrame = frame.components[3];
+    frame.superHead = frame.components[3];
+    frame.minimizeButton = frame.components[4];
 
     //Super frame is a Special Frame
-    frame.superFrame.cssText = "position:absolute; top:-20px; left: -20px; width:calc(100% + 40px); height:64px;";
+    frame.superHead.cssText = "position:absolute; top:-20px; left: -20px; width:calc(100% + 40px); height:48px;";
 
+    //Minimize Button
+    frame.minimizeButton.cssText = "position:absolute; top:1; right:1; width:30px; height:30px; background-color:Gray; border:1px solid Black;";
 
     /**
      * This code snippet defines a function forBody on the frame object, which takes a callback as an argument. Inside the function, it calls the callback with frame.body as the argument and then returns this.
@@ -1024,7 +1030,7 @@ function KDWindow(params) {
 
         this.KDVisualComponentContainerBuild();
         this.setTitle(this.title);
-        this.makeDraggable(this.superFrame, this);
+        this.makeDraggable(this.superHead, this);
         this.applyTheme(this.theme);
 
 
@@ -1040,7 +1046,6 @@ function KDWindow(params) {
 
     return frame;
 }
-
 
 
 function KDMessage(params) {
@@ -1105,7 +1110,7 @@ function KDTerminalApplication(params) {
 
         let l = line.split(" ");
         let cmd = l[0];
-        let args = l.slice(1).join('');
+        let args = l.slice(1);
         let args2 = [];
         for (let i = 0; i < args.length; i++) {
             args2.push(args[i]);
