@@ -285,7 +285,7 @@ class KDVisualComponent extends KDComponent {
          * @param {string} cssText - The CSS text to append
          * @return {Object} - The updated object
          */
-        this.appendStyleCssText = function (cssText) {
+        this.appendCssText = function (cssText) {
 
             if (this.cssText === null) {
                 this.cssText = "";
@@ -458,7 +458,7 @@ class KDVisualComponent extends KDComponent {
          */
         this.center = function () {
             if (this.isBuilt) {
-                this.appendStyleCssText("position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);");
+                this.appendCssText("position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);");
             }
             return this;
         }
@@ -1030,7 +1030,7 @@ function KDWindow(params) {
     frame.minimizeButton.cssTextForChildren = "position:absolute;";
     frame.minimizeButton.append(
         KDHorizontalLine()
-            .appendStyleCssText("position:absolute; top:12px; left:2px; width:calc(100% - 6px); height:4px;")
+            .appendCssText("position:absolute; top:12px; left:2px; width:calc(100% - 6px); height:4px;")
     );
     frame.minimizeButton.addEvent("click", function () {
         frame.setVisible(false);
@@ -1057,10 +1057,10 @@ function KDWindow(params) {
     frame.applyTheme = function (theme) {
         this.theme = theme;
         if (this.isBuilt) {
-            this.appendStyleCssText(theme.frameStyle);
-            this.head.appendStyleCssText(theme.headStyle);
-            this.body.appendStyleCssText(theme.bodyStyle);
-            this.foot.appendStyleCssText(theme.footStyle);
+            this.appendCssText(theme.frameStyle);
+            this.head.appendCssText(theme.headStyle);
+            this.body.appendCssText(theme.bodyStyle);
+            this.foot.appendCssText(theme.footStyle);
         }
         return this;
     }
@@ -1166,7 +1166,7 @@ function KDTerminalApplication(params) {
     app.newLine = function () {
         app.window.append(
             KDInputText()
-                .appendStyleCssText("width:100%; border:none; outline:none;")
+                .appendCssText("width:100%; border:none; outline:none;")
                 .addEvent("keydown", function (e) {
                     app.focusedLine = e.target;
                     if (e.keyCode == 13 || e.keyCode == 10) {
