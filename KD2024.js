@@ -706,6 +706,7 @@ function KDLayer(params) {
         if (this.isBuilt) {
             this.domElement.innerText = this.value;
         }
+        return obj;
     }
     return obj;
 }
