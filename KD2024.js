@@ -14,9 +14,21 @@ const KD = {
 
     kernel: {
         applications: [],
-    },
+        append: function (app) {
+            obj.applications.push(app);
+            return obj;
+        },
+        sendMessage: function (message) {
+            for (let i = 0; i < this.applications.length; i++) {
+                if (message.target == this.applications[i].name) {
+                    this.applications[i].processMesage(message);
+                }
+            }
+
+        },
 
 
+    }
 }
 
 
@@ -1124,27 +1136,10 @@ class KDApplication extends KDObject {
 }
 
 
-function KDApplicationManager(params) {
-    let obj = KD.kernel;
-
-    obj.append = function (app) {
-        obj.applications.push(app);
-        return obj;
-    }
-
-    obj.sendMessage = function (message) {
-        for (let i = 0; i < obj.applications.length; i++) {
-            if (message.target == obj.applications[i].name) {
-                obj.applications[i].processMesage(message);
-            }
-        }
-    }
-
-    return obj;
-}
-
 
 function KDTerminalApplication(params) {
+    if (params === undefined) params = {};
+    params["name"] = "terminal";
     let app = new KDApplication(params);
     app.focusedLine = null;
 
@@ -1158,7 +1153,7 @@ function KDTerminalApplication(params) {
             args2.push(args[i]);
         }
 
-        KDApplicationManager().sendMessage(KDMessage({ "source": "terminal", "target": cmd, "data": args2 }));
+        KD.kernel.sendMessage(KDMessage({ "source": "terminal", "target": cmd, "data": args2 }));
 
         return app;
     }
@@ -1215,7 +1210,7 @@ function KDTerminalApplication(params) {
     return app;
 }
 
-function KDConsoleApplication(params) {
+(function KDConsoleApplication(params) {
     let app = new KDApplication({ name: "console" });
 
     app.run = function (args) {
@@ -1228,8 +1223,8 @@ function KDConsoleApplication(params) {
     }
 
     return app;
-}
+})();
 
-KDConsoleApplication().run();
+//KDConsoleApplication();
 
 //Pruebas
