@@ -36,12 +36,17 @@ class KDComponent extends KDObject {
 
 class KDVisualComponent extends KDComponent {
     constructor(params) {
-        super(params);
-
+        
         this.htmlElement = "div";
         this.isBuilt = false;
         this.domElement = null;
         this.htmlType = "text";
+        this.cssText = null;
+        this.events = {};
+        
+        super(params);
+
+        
 
 
     }
