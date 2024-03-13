@@ -469,9 +469,9 @@ class KDVisualComponent extends KDComponent {
          * @return {KDVisualComponent} The current object for chaining.
          */
         this.center = function () {
-            if (this.isBuilt) {
-                this.appendCssText("position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);");
-            }
+
+            this.appendCssText("position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);");
+
             return this;
         }
 
@@ -871,6 +871,7 @@ function KDInputHidden(params) {
     let obj = new KDVisualComponent(params);
     obj.htmlElement = "input";
     obj.htmlType = "hidden";
+
     return obj;
 }
 
@@ -878,8 +879,42 @@ function KDInputImage(params) {
     let obj = new KDVisualComponent(params);
     obj.htmlElement = "input";
     obj.htmlType = "image";
+
+    obj.setValue = function (value) {
+        this.value = value;
+        if (this.isBuilt) {
+            this.domElement.src = this.value;
+        }
+        return obj;
+
+    }
+
     return obj;
 }
+
+
+
+function KDImage(params) {
+    let obj = new KDVisualComponent(params);
+    obj.htmlElement = "img";
+    //obj.htmlType = "image";
+
+    obj.setValue = function (value) {
+        this.value = value;
+        if (this.isBuilt) {
+            this.domElement.src = this.value;
+        }
+        return obj;
+
+    }
+
+    return obj;
+}
+
+
+
+
+
 
 function KDInputMonth(params) {
     let obj = new KDVisualComponent(params);
@@ -977,12 +1012,54 @@ function KDHorizontalLine(params) {
 function KDScreen(params) {
     let obj = new KDVisualComponentContainer(params);
     obj.htmlElement = "div";
-    obj.cssText = "position:fixed; top:0; left:0; width:100%; height:100%; background-color: LemonChiffon; border:1px solid Black; box-sizing:border-box;";
+    obj.cssText = "position:fixed; top:0; left:0; width:100%; height:100%; background-color: Snow; border:1px solid Black; box-sizing:border-box;";
     obj.cssText += "";
     return obj;
 }
 
+function KDDesktop(params) {
+    let desktop = new KDScreen(params);
 
+    //Esquina superior izquierda
+    let corner = new KDVisualComponentContainer(params);
+    corner.htmlElement = "div";
+    corner.cssText = "position:absolute; top:-10vw; left:-10vw; width:20vw; height:20vw; border-radius:50%;  background: linear-gradient(to right, #33ccff 18%, #ff99cc 100%);box-shadow: 10px 10px 5px #888888;";
+    corner.build();
+    corner.addEvent("mouseover", function (e) {
+        corner.domElement.animate(
+            [{ transform: "scale(2.0, 2.0)" }],
+            { duration: 1000, fill: "forwards" }
+        );
+
+        corner.domElement.animate(
+            [{ background: "linear-gradient(to right, white 18%, blue 100%)" }],
+            { duration: 100, direction: "alternate", iterations: 3 }
+        );
+    })
+
+    corner.addEvent("mouseout", function (e) {
+        corner.domElement.animate(
+            [{ transform: "scale(1.0, 1.0)" }],
+            { duration: 1000, fill: "forwards" }
+        );
+
+        animations[1].cancel();
+
+    })
+
+    // applications layer:
+    let appLayer = KDLayer()
+    .append()
+
+
+
+   
+
+    desktop.append(corner);
+
+    return desktop;
+
+}
 
 function KDWindowTheme(params) {
     let obj = new KDObject(params);
@@ -1039,11 +1116,11 @@ function KDWindow(params) {
     frame.superHead.cssText = "position:absolute; top:-20px; left: -20px; width:calc(100% + 40px); height:48px;";
 
     //Minimize Button
-    frame.minimizeButton.cssText = "position:absolute; top:1px; right:1px; width:30px; height:28px; border:1px solid Black;";
+    frame.minimizeButton.cssText = "position:absolute; top:2px; right:4px; width:28px; height:24px; border:1px solid Black;";
     frame.minimizeButton.cssTextForChildren = "position:absolute;";
     frame.minimizeButton.append(
         KDHorizontalLine()
-            .appendCssText("position:absolute; top:12px; left:2px; width:calc(100% - 6px); height:4px;")
+            .appendCssText("position:absolute; top:8px; left:2px; width:calc(100% - 6px); height:4px;")
     );
     frame.minimizeButton.addEvent("click", function () {
         frame.setVisible(false);
