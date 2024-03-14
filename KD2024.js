@@ -21,7 +21,7 @@ const KD = {
         sendMessage: function (message) {
             for (let i = 0; i < this.applications.length; i++) {
                 if (message.target == this.applications[i].name) {
-                    this.applications[i].processMesage(message);
+                    return this.applications[i].processMesage(message);
                 }
             }
 
@@ -1070,7 +1070,7 @@ function KDDesktop(params) {
                 .append(
                     KDInputButton()
                         .setField("name")
-                        .addEvent("click", () => { KD.kernel.sendMessage(KDMessage({ "source": "desktop", "target": "terminal", "data": "run" })) })
+                        .addEvent("click", () => { KD.kernel.sendMessage(KDMessage({ "source": "desktop", "target": "terminal", "data": "SHOW_terminal" })) })
                 )
 
         )
@@ -1228,6 +1228,9 @@ class KDApplication extends KDObject {
         KD.kernel.applications.push(this);
         this.name = this.name ? this.name : "Application";
 
+        // Generics commands:
+        this.SHOW = "SHOW_" + this.name;
+
     }
 
     run() {
@@ -1250,28 +1253,40 @@ class KDApplication extends KDObject {
 
     app.processLine = function (line) {
 
-        let l = line.split(" ");
-        let cmd = l[0];
-        let args = l.slice(1);
-        let args2 = [];
-        for (let i = 0; i < args.length; i++) {
-            args2.push(args[i]);
-        }
+        //Buscamos el parentesis mas interno>
+        let r1 = /\([^(]*?\)/g;
 
-        KD.kernel.sendMessage(KDMessage({ "source": "terminal", "target": cmd, "data": args2 }));
+        if (!r1.test(line)) {
+            app.newLine(line);
+        } else {
+
+            let found = line.match(r1).toString();
+            found = found.substring(1);
+            found = found.substring(0, found.length - 1);
+            let s = found.indexOf(" ");
+            let cmd = found.substring(0, s);
+            let args = found.substring(s + 1);
+            let r = KD.kernel.sendMessage(KDMessage({ "source": "terminal", "target": cmd, "data": args }));
+
+            if (r != undefined) {
+                line = line.replace(r1, r);
+                app.processLine(line);
+            }
+        }
 
         return app;
     }
 
 
-    app.newLine = function () {
+    app.newLine = function (text) {
         app.window.append(
             KDInputText()
+                .setValue(text === undefined ? "" : text)
                 .appendCssText("width:100%; border:none; outline:none;")
                 .addEvent("keydown", function (e) {
                     app.focusedLine = e.target;
                     if (e.keyCode == 13 || e.keyCode == 10) {
-                        app.processLine(app.focusedLine.value);
+                        app.processLine("(" + app.focusedLine.value + ")");
 
                         if (app.focusedLine.nextElementSibling == null) {
                             app.newLine();
@@ -1313,16 +1328,20 @@ class KDApplication extends KDObject {
     }
 
     app.processMesage = (message) => {
-        if (message.target == "terminal") {
-            if (message.data == "run") {
-                if (app.window == undefined) {
-                    app.run();
-                } else {
-                    app.window.setVisible(true);
-                }
 
+        if (message.data == app.SHOW) {
+            if (app.window == undefined) {
+                app.run();
+            } else {
+                app.window.setVisible(true);
             }
+
+        } else if (message.data == "close") {
+            app.window.setVisible(false);
+        } else {
+            app.newLine(message.data);
         }
+
     }
 
     return app;
@@ -1338,6 +1357,18 @@ class KDApplication extends KDObject {
 
     app.processMesage = function (message) {
         console.log(message.data);
+    }
+
+    return app;
+})();
+
+(function KDEval(params) {
+    let app = new KDApplication({ name: "eval" });
+
+    app.processMesage = function (message) {
+        let r = eval(message.data);
+        let m = KDMessage({ "source": "eval", "target": "terminal", "data": r });
+        return KD.kernel.sendMessage(m);
     }
 
     return app;
