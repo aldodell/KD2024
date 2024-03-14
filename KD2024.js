@@ -183,6 +183,13 @@ class KDComponent extends KDObject {
         }
 
         /**
+         * @description Set the name of the field
+         * @param {*} name 
+         * @returns itself component
+         */
+        this.setField = (name) => { this.field = name; return this; }
+
+        /**
          * @description Build the component
          * @returns {KDVisualComponent}
          */
@@ -342,12 +349,12 @@ class KDVisualComponent extends KDComponent {
 
 
         /**
-         * Show the component on the surface.
+         * publish the component on the surface.
          *
-         * @param {Object} component - the component to be shown
+         * @param {Object} component - the component to be publishn
          * @return {KDVisualComponent} - the modified object
          */
-        this.show = function (component) {
+        this.publish = function (component) {
 
             if (!this.isBuilt) {
                 this.build();
@@ -784,6 +791,7 @@ function KDList(params) {
 
     /**
      * Fill the list with data, creating a component for each item in the data array.
+     * Data mut be and array of objects
      */
     obj.fill = function () {
         for (let i = 0; i < this.data.length; i++) {
@@ -791,7 +799,7 @@ function KDList(params) {
             comps.setValueDeeply(comps, this.data[i]);
             if (comps.isBuilt == false) { comps.build(); };
             this.append(comps);
-            console.log(comps);
+
         }
     }
 
@@ -1025,6 +1033,7 @@ function KDDesktop(params) {
     corner.htmlElement = "div";
     corner.cssText = "position:absolute; top:-10vw; left:-10vw; width:20vw; height:20vw; border-radius:50%;  background: linear-gradient(to right, #33ccff 18%, #ff99cc 100%);box-shadow: 10px 10px 5px #888888;";
     corner.build();
+
     corner.addEvent("mouseover", function (e) {
         corner.domElement.animate(
             [{ transform: "scale(2.0, 2.0)" }],
@@ -1043,19 +1052,37 @@ function KDDesktop(params) {
             { duration: 1000, fill: "forwards" }
         );
 
-        animations[1].cancel();
+
 
     })
 
+    let applicationsList = [];
+    KD.kernel.applications.map((app) =>
+        applicationsList.push({ "name": app.name, "icon": app.icon })
+    )
+    console.log(applicationsList);
+
     // applications layer:
-    let appLayer = KDLayer()
-    .append()
+    let appLayer = KDList()
+        .append(
+            KDRow()
+                .setField("icon")
+                .append(
+                    KDInputButton()
+                        .setField("name")
+                        .addEvent("click", () => { KD.kernel.sendMessage(KDMessage({ "source": "desktop", "target": "terminal", "data": "run" })) })
+                )
+
+        )
+        .setData(applicationsList);
 
 
 
-   
+
+
 
     desktop.append(corner);
+    desktop.append(appLayer);
 
     return desktop;
 
@@ -1214,7 +1241,8 @@ class KDApplication extends KDObject {
 
 
 
-function KDTerminalApplication(params) {
+(function KDTerminalApplication(params) {
+
     if (params === undefined) params = {};
     params["name"] = "terminal";
     let app = new KDApplication(params);
@@ -1274,7 +1302,7 @@ function KDTerminalApplication(params) {
 
         //Hacemos la ventana
         app.window = new KDWindow()
-            .show()
+            .publish()
             .center()
             .setSize(params["width"], params["height"])
             .setTitle("Terminal");
@@ -1284,10 +1312,23 @@ function KDTerminalApplication(params) {
         return app;
     }
 
-    return app;
-}
+    app.processMesage = (message) => {
+        if (message.target == "terminal") {
+            if (message.data == "run") {
+                if (app.window == undefined) {
+                    app.run();
+                } else {
+                    app.window.setVisible(true);
+                }
 
-(function KDConsoleApplication(params) {
+            }
+        }
+    }
+
+    return app;
+})();
+
+(function KDConsoleAppication(params) {
     let app = new KDApplication({ name: "console" });
 
     app.run = function (args) {
@@ -1302,6 +1343,5 @@ function KDTerminalApplication(params) {
     return app;
 })();
 
-//KDConsoleApplication();
 
-//Pruebas
+
