@@ -13,14 +13,47 @@
     <script>
 
 
+        var aircrafts = [
+            { name: "A320", img: "a320.png" },
+            { name: "A330", img: "a330.png" },
+            { name: "A340", img: "a340.png" },]
 
-        KDDesktop()
+        KDList()
             .append(
-                KDImage()
-                    .setValue("selva.png")
-                    .center()
+
+                KDLayer()
+                    .setField("name")
+
             )
-            .publish();
+
+            .setData(aircrafts)
+            .publish()
+
+
+
+        /*
+             KDDesktop()
+             .append(
+                 KDImage()
+                     .setValue("selva.png")
+                     .center(),
+                 KDList()
+                    
+                     .append(
+                         KDRow()
+                             .append(
+                                 KDLayer()
+                                     .setField("name")
+ 
+                             )
+                     )
+                     .setData(aircrafts)
+             )
+             .publish();
+             */
+
+
+
 
 
 

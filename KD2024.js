@@ -576,6 +576,15 @@ class KDVisualComponentContainer extends KDVisualComponent {
          * 
          */
         this.setData = function (json) {
+
+            //If this component has a field, set the value of the component based on the field in the JSON object
+            if (this.field !== undefined) {
+                if (json[this.field] !== undefined) {
+                    this.setValue(json[this.field]);
+                }
+            }
+
+            //If this component has nested components, set the value of the component based on the field in the JSON object
             for (let i = 0; i < this.components.length; i++) {
                 let comp = this.components[i];
                 if (json[comp.field] !== undefined) {
@@ -589,6 +598,29 @@ class KDVisualComponentContainer extends KDVisualComponent {
             }
             return this
         }
+
+
+        /**
+        * This code snippet defines a function setValueDeeply that recursively sets values on a component and its nested components based on a JSON object. If the component has nested components, it iterates through them and calls setValueDeeply recursively. If there are no nested components, it sets the value of the component based on the JSON object. Finally, it returns the current context (this).
+        * @param {*} component 
+        * @param {*} json 
+        */
+        this.setValueDeeply = function (component, json) {
+
+            if (component.components !== undefined) {
+                for (let i = 0; i < component.components.length; i++) {
+                    this.setValueDeeply(component.components[i], json);
+                }
+            } else {
+                component.setValue(json[component.field]);
+            }
+
+            return this;
+        }
+
+
+
+
 
         //Save build method from parent
         this.KDVisualComponentBuild = this.build;
@@ -617,23 +649,6 @@ class KDVisualComponentContainer extends KDVisualComponent {
             return this;
         }
 
-        /**
-         * This code snippet defines a function setValueDeeply that recursively sets values on a component and its nested components based on a JSON object. If the component has nested components, it iterates through them and calls setValueDeeply recursively. If there are no nested components, it sets the value of the component based on the JSON object. Finally, it returns the current context (this).
-         * @param {*} component 
-         * @param {*} json 
-         */
-        this.setValueDeeply = function (component, json) {
-
-            if (component.components !== undefined) {
-                for (let i = 0; i < component.components.length; i++) {
-                    this.setValueDeeply(component.components[i], json);
-                }
-            } else {
-                component.setValue(json[component.field]);
-            }
-
-            return this;
-        }
 
         this.KDVisualComponentClone = this.clone;
         this.clone = function () {
@@ -727,6 +742,15 @@ function KDLayer(params) {
         }
         return obj;
     }
+
+    obj.KDVisualComponentContainerBuild = obj.build;
+    obj.build = function () {
+        this.KDVisualComponentContainerBuild();
+        if (this.value !== undefined) {
+            this.domElement.innerText = this.value;
+        }
+        return obj;
+    }
     return obj;
 }
 
@@ -801,6 +825,7 @@ function KDList(params) {
             this.append(comps);
 
         }
+        return this;
     }
 
     return obj;
@@ -1064,6 +1089,10 @@ function KDDesktop(params) {
 
     // applications layer:
     let appLayer = KDList()
+        .appendCssText("position:absolute; width:25%; height:25%; top:50%; left:50%; transform:translate(-50%, -50%);")
+        .appendCssText("border:1px solid black;")
+        .appendCssText("padding:8px;")
+        .appendCssText("z-index:10;")
         .append(
             KDRow()
                 .setField("icon")
