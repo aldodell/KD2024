@@ -1282,13 +1282,56 @@ class KDApplication extends KDObject {
 
     app.processLine = function (line) {
 
+
+        let tokens = line.split("|");
+        let result;
+        let command;
+        let args;
+        let firstSpace;
+
+        tokens.map(function (token) {
+            token = token.trim();
+
+            firstSpace = token.indexOf(" ");
+
+            if (firstSpace > -1) {
+                command = token.substring(0, firstSpace);
+                args = token.substring(firstSpace + 1);
+            } else {
+                if (args == undefined) {
+                    args = token;
+                } else if (command == undefined) {
+                    command = token;
+                }
+
+            }
+
+            if (command != undefined) {
+
+                //If command exists as a terminal command
+                if (KD.kernel.applications.includes(command)) {
+                    result = KD.kernel.sendMessage(KDMessage({ "source": "terminal", "target": command, "data": args }));
+                    command = undefined;
+                    args = result;
+                } else {
+                    args = token;
+                    command = undefined;
+                }
+
+            }
+
+        });
+
+
+
+        /*
         //Buscamos el parentesis mas interno>
         let r1 = /\([^(]*?\)/g;
-
+    
         if (!r1.test(line)) {
             app.newLine(line);
         } else {
-
+    
             let found = line.match(r1).toString();
             found = found.substring(1);
             found = found.substring(0, found.length - 1);
@@ -1296,12 +1339,13 @@ class KDApplication extends KDObject {
             let cmd = found.substring(0, s);
             let args = found.substring(s + 1);
             let r = KD.kernel.sendMessage(KDMessage({ "source": "terminal", "target": cmd, "data": args }));
-
+    
             if (r != undefined) {
                 line = line.replace(r1, r);
                 app.processLine(line);
             }
         }
+        */
 
         return app;
     }
@@ -1315,7 +1359,7 @@ class KDApplication extends KDObject {
                 .addEvent("keydown", function (e) {
                     app.focusedLine = e.target;
                     if (e.keyCode == 13 || e.keyCode == 10) {
-                        app.processLine("(" + app.focusedLine.value + ")");
+                        app.processLine(app.focusedLine.value);
 
                         if (app.focusedLine.nextElementSibling == null) {
                             app.newLine();
@@ -1396,12 +1440,28 @@ class KDApplication extends KDObject {
 
     app.processMesage = function (message) {
         let r = eval(message.data);
-        let m = KDMessage({ "source": "eval", "target": "terminal", "data": r });
+        let m = KDMessage({ "source": "eval", "target": message.source, "data": r });
         return KD.kernel.sendMessage(m);
     }
 
     return app;
 })();
+
+(function KDAlertAppication(params) {
+    let app = new KDApplication({ name: "alert" });
+
+    app.run = function (args) {
+        return app;
+    }
+
+
+    app.processMesage = function (message) {
+        window.alert(message.data);
+    }
+
+    return app;
+})();
+
 
 
 
