@@ -1292,12 +1292,43 @@ class KDApplication extends KDObject {
 
     app.processLine = function (line) {
 
-        let re1 = /(\w+)\s*=\s*((\")[^\"]*?(\")|\w+)/g;
+        let re1 = /(\w+)\s*=\s*(\w+|"[^"]+?")|("[^"]+?")|(\w+)/g;
+
+        let args = new Object();
+        let command;
 
         let tokens = line.split("|");
+        tokens.map(function (token) {
+            command = undefined;
+            token = token.trim();
+
+            for (const m of token.matchAll(re1)) {
+                console.log(m);
+
+                if (m[4] != undefined) {
+                    command = m[4];
+                } else if (m[3] != undefined) {
+                    args = m[3];
+                } else {
+                    args[m[1]] = m[2];
+                }
+            }
+
+            if (KD.kernel.exists(command)) {
+                args = KD.kernel.sendMessage(KDMessage({ "source": "terminal", "target": command, "data": args }));
+                if (args == undefined) { args = new Object(); }
+            }
+
+
+
+        });
+
+
+
+        /*
+        let tokens = line.split("|");
         let result;
-        let command;
-        let args;
+       
         let firstSpace;
 
         tokens.map(function (token) {
@@ -1324,6 +1355,7 @@ class KDApplication extends KDObject {
 
 
         });
+        */
 
         if (args != undefined) {
             app.newLine(args);
