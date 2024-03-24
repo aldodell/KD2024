@@ -26,6 +26,14 @@ const KD = {
             }
 
         },
+        exists: function (name) {
+            for (let i = 0; i < this.applications.length; i++) {
+                if (name == this.applications[i].name) {
+                    return true;
+                }
+            }
+            return false;
+        }
 
 
     }
@@ -1256,9 +1264,11 @@ class KDApplication extends KDObject {
         super(params);
         KD.kernel.applications.push(this);
         this.name = this.name ? this.name : "Application";
+        this.category = this.category ? this.category : "system";
 
         // Generics commands:
         this.SHOW = "SHOW_" + this.name;
+        this.CLOSE = "CLOSE_" + this.name;
 
     }
 
@@ -1282,6 +1292,7 @@ class KDApplication extends KDObject {
 
     app.processLine = function (line) {
 
+        let re1 = /(\w+)\s*=\s*((\")[^\"]*?(\")|\w+)/g;
 
         let tokens = line.split("|");
         let result;
@@ -1294,58 +1305,30 @@ class KDApplication extends KDObject {
 
             firstSpace = token.indexOf(" ");
 
-            if (firstSpace > -1) {
-                command = token.substring(0, firstSpace);
-                args = token.substring(firstSpace + 1);
+            if (token.substring(0, 1) == "{") {
+                args = JSON.parse(token);
             } else {
-                if (args == undefined) {
-                    args = token;
-                } else if (command == undefined) {
+                if (firstSpace > -1) {
+                    command = token.substring(0, firstSpace);
+                    args = token.substring(firstSpace + 1);
+                } else {
                     command = token;
                 }
 
-            }
-
-            if (command != undefined) {
-
-                //If command exists as a terminal command
-                if (KD.kernel.applications.includes(command)) {
-                    result = KD.kernel.sendMessage(KDMessage({ "source": "terminal", "target": command, "data": args }));
-                    command = undefined;
-                    args = result;
+                if (KD.kernel.exists(command)) {
+                    args = KD.kernel.sendMessage(KDMessage({ "source": "terminal", "target": command, "data": args }));
                 } else {
                     args = token;
-                    command = undefined;
                 }
-
             }
+
 
         });
 
-
-
-        /*
-        //Buscamos el parentesis mas interno>
-        let r1 = /\([^(]*?\)/g;
-    
-        if (!r1.test(line)) {
-            app.newLine(line);
-        } else {
-    
-            let found = line.match(r1).toString();
-            found = found.substring(1);
-            found = found.substring(0, found.length - 1);
-            let s = found.indexOf(" ");
-            let cmd = found.substring(0, s);
-            let args = found.substring(s + 1);
-            let r = KD.kernel.sendMessage(KDMessage({ "source": "terminal", "target": cmd, "data": args }));
-    
-            if (r != undefined) {
-                line = line.replace(r1, r);
-                app.processLine(line);
-            }
+        if (args != undefined) {
+            app.newLine(args);
+            args = undefined;
         }
-        */
 
         return app;
     }
@@ -1409,17 +1392,26 @@ class KDApplication extends KDObject {
                 app.window.setVisible(true);
             }
 
-        } else if (message.data == "close") {
+        } else if (message.data == app.CLOSE) {
             app.window.setVisible(false);
         } else {
             app.newLine(message.data);
         }
+
+        return undefined;
 
     }
 
     return app;
 })();
 
+
+
+/**
+ * Creates a new console application. 
+ * Useful for debugging purposes.
+ * On terminal type: console [message].
+ */
 (function KDConsoleAppication(params) {
     let app = new KDApplication({ name: "console" });
 
@@ -1430,23 +1422,36 @@ class KDApplication extends KDObject {
 
     app.processMesage = function (message) {
         console.log(message.data);
+        return undefined;
     }
 
     return app;
 })();
 
+/**
+ * Creates a new eval application. 
+ * Useful for debugging purposes.
+ * On terminal type: eval [message].
+ * [message] can be a javascript expression.
+ */
 (function KDEval(params) {
     let app = new KDApplication({ name: "eval" });
 
     app.processMesage = function (message) {
         let r = eval(message.data);
         let m = KDMessage({ "source": "eval", "target": message.source, "data": r });
-        return KD.kernel.sendMessage(m);
+        return r; //KD.kernel.sendMessage(m);
     }
 
     return app;
 })();
 
+/**
+ * Creates a new alert application. 
+ * Useful for debugging purposes.
+ * On terminal type: alert [message].
+ * [message] show an alert message.
+ */
 (function KDAlertAppication(params) {
     let app = new KDApplication({ name: "alert" });
 
@@ -1457,11 +1462,35 @@ class KDApplication extends KDObject {
 
     app.processMesage = function (message) {
         window.alert(message.data);
+        return undefined;
     }
 
     return app;
 })();
 
+
+(function KDAlertRandom(params) {
+    let app = new KDApplication({ name: "random" });
+
+    app.run = function (args) {
+        return app;
+    }
+
+
+    app.processMesage = function (message) {
+        let min = 0;
+        let max = 1;
+
+        if (message.data != undefined) {
+            min = message.data["min"] ? message.data["min"] : 0;
+            max = message.data["max"] ? message.data["max"] : 1;
+        }
+        return Math.random() * (max - min) + min;
+
+    }
+
+    return app;
+})();
 
 
 
