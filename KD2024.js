@@ -1510,14 +1510,17 @@ class KDApplication extends KDObject {
 
 
     app.processMesage = function (message) {
-        let min = 0;
-        let max = 1;
+
+        let r;
 
         if (message.data != undefined) {
-            min = message.data["min"] ? message.data["min"] : 0;
-            max = message.data["max"] ? message.data["max"] : 1;
+            let min = parseInt(message.data["min"] ? message.data["min"] : 0);
+            let max = parseInt(message.data["max"] ? message.data["max"] : 1);
+            r = Math.floor(Math.random() * (max - min + 1) + min);
+        } else {
+            r = Math.random();
         }
-        return Math.random() * (max - min) + min;
+        return r;
 
     }
 
