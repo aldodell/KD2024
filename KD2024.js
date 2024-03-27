@@ -195,7 +195,10 @@ class KDComponent extends KDObject {
          * @param {*} name 
          * @returns itself component
          */
-        this.setField = (name) => { this.field = name; return this; }
+        this.setField = (name) => {
+            this.field = name;
+            return this;
+        }
 
         /**
          * @description Build the component
@@ -534,6 +537,8 @@ class KDVisualComponentContainer extends KDVisualComponent {
          */
         this.cssTextForChildren = ";";
 
+        this.data = null;
+
 
         /**
          * 
@@ -549,30 +554,6 @@ class KDVisualComponentContainer extends KDVisualComponent {
                     this.domElement.appendChild(comp.domElement);
                 }
                 this.components.push(comp);
-
-
-            }
-            return this;
-        }
-
-        /**
-         * 
-         * @param {*} field 
-         * @param {*} value 
-         *
-         * @returns itself
-         * This code defines a method setValueByField 
-         * that takes a field and a value as input. 
-         * It loops through the components and sets 
-         * the value of the component with the matching field. 
-         * Finally, it returns the current object. 
-         */
-        this.setValueByField = function (field, value) {
-            for (let i = 0; i < this.components.length; i++) {
-                let comp = this.components[i];
-                if (comp.field === field) {
-                    comp.setValue(value);
-                }
             }
             return this;
         }
@@ -585,9 +566,11 @@ class KDVisualComponentContainer extends KDVisualComponent {
          */
         this.setData = function (json) {
 
+            this.data = json;
+
             //If this component has a field, set the value of the component based on the field in the JSON object
             if (this.field !== undefined) {
-                if (json[this.field] !== undefined) {
+                if (json[this.field] != undefined) {
                     this.setValue(json[this.field]);
                 }
             }
@@ -608,28 +591,6 @@ class KDVisualComponentContainer extends KDVisualComponent {
         }
 
 
-        /**
-        * This code snippet defines a function setValueDeeply that recursively sets values on a component and its nested components based on a JSON object. If the component has nested components, it iterates through them and calls setValueDeeply recursively. If there are no nested components, it sets the value of the component based on the JSON object. Finally, it returns the current context (this).
-        * @param {*} component 
-        * @param {*} json 
-        */
-        this.setValueDeeply = function (component, json) {
-
-            if (component.components !== undefined) {
-                for (let i = 0; i < component.components.length; i++) {
-                    this.setValueDeeply(component.components[i], json);
-                }
-            } else {
-                component.setValue(json[component.field]);
-            }
-
-            return this;
-        }
-
-
-
-
-
         //Save build method from parent
         this.KDVisualComponentBuild = this.build;
 
@@ -640,6 +601,10 @@ class KDVisualComponentContainer extends KDVisualComponent {
                 comp.cssText += this.cssTextForChildren;
                 if (comp.domElement === null || !comp.isBuilt) {
                     comp.build();
+
+                    if (this.data != null) {
+                        this.setData(this.data);
+                    }
                 }
 
                 this.domElement.appendChild(comp.domElement);
@@ -743,10 +708,13 @@ function KDLayer(params) {
     let obj = new KDVisualComponentContainer(params);
     obj.htmlElement = "div";
     obj.cssTextForChildren += ";position:relative;";
+
     obj.setValue = function (value) {
         this.value = value;
         if (this.isBuilt) {
-            this.domElement.innerText = this.value;
+            let content = document.createTextNode(this.value);
+            this.domElement.appendChild(content);
+            //  this.domElement.innerHTML = this.value;
         }
         return obj;
     }
@@ -755,7 +723,7 @@ function KDLayer(params) {
     obj.build = function () {
         this.KDVisualComponentContainerBuild();
         if (this.value !== undefined) {
-            this.domElement.innerText = this.value;
+            this.setValue(this.value);
         }
         return obj;
     }
@@ -803,21 +771,9 @@ function KDList(params) {
     obj.componentsTemplate = null;
     obj.data = null;
 
-
-    obj.setData = function (data) {
-        this.data = data;
-        if (this.isBuilt) { this.fill() }
-        return this;
-    }
-
     obj.build = function () {
-        //this.componentsTemplate = KD.create(this.components)[0];
-        this.componentsTemplate = this.components[0].clone();
-        this.clear();
         this.KDVisualComponentContainerBuild();
-        if (this.data != null) {
-            this.fill();
-        }
+        this.componentsTemplate = this.components[0].clone();
         return this;
     }
 
@@ -825,17 +781,20 @@ function KDList(params) {
      * Fill the list with data, creating a component for each item in the data array.
      * Data mut be and array of objects
      */
-    obj.fill = function () {
-        for (let i = 0; i < this.data.length; i++) {
-            const comps = this.componentsTemplate.clone();
-            comps.setValueDeeply(comps, this.data[i]);
-            if (comps.isBuilt == false) { comps.build(); };
-            this.append(comps);
-
+    obj.setArrayData = function (arrayData) {
+        obj.arrayData = arrayData;
+        if (obj.isBuilt) {
+            obj.clear();
+            obj.arrayData.map(function (row) {
+                const comps = obj.componentsTemplate.clone();
+                comps.setData(row);
+                if (comps.isBuilt == false) { comps.build(); };
+                obj.append(comps);
+            });
+            return obj;
         }
         return this;
     }
-
     return obj;
 }
 
@@ -1105,18 +1064,14 @@ function KDDesktop(params) {
             KDRow()
                 .setField("icon")
                 .append(
-                    KDInputButton()
+                    KDLayer()
                         .setField("name")
                         .addEvent("click", () => { KD.kernel.sendMessage(KDMessage({ "source": "desktop", "target": "terminal", "data": "SHOW_terminal" })) })
                 )
 
         )
-        .setData(applicationsList);
-
-
-
-
-
+        .setArrayData(applicationsList)
+        .build();
 
     desktop.append(corner);
     desktop.append(appLayer);
@@ -1252,7 +1207,9 @@ function KDMessage(params) {
 }
 
 
-
+/**
+ * The KDApplication class is the base class for all applications.
+ */
 class KDApplication extends KDObject {
     /**
      * Constructor for creating a new instance.
@@ -1323,39 +1280,6 @@ class KDApplication extends KDObject {
 
         });
 
-
-
-        /*
-        let tokens = line.split("|");
-        let result;
-       
-        let firstSpace;
-
-        tokens.map(function (token) {
-            token = token.trim();
-
-            firstSpace = token.indexOf(" ");
-
-            if (token.substring(0, 1) == "{") {
-                args = JSON.parse(token);
-            } else {
-                if (firstSpace > -1) {
-                    command = token.substring(0, firstSpace);
-                    args = token.substring(firstSpace + 1);
-                } else {
-                    command = token;
-                }
-
-                if (KD.kernel.exists(command)) {
-                    args = KD.kernel.sendMessage(KDMessage({ "source": "terminal", "target": command, "data": args }));
-                } else {
-                    args = token;
-                }
-            }
-
-
-        });
-        */
 
         if (args != undefined) {
             app.newLine(args);
@@ -1454,7 +1378,7 @@ class KDApplication extends KDObject {
 
     app.processMesage = function (message) {
         console.log(message.data);
-        return undefined;
+        return message.data;
     }
 
     return app;
@@ -1494,7 +1418,7 @@ class KDApplication extends KDObject {
 
     app.processMesage = function (message) {
         window.alert(message.data);
-        return undefined;
+        return message.data;
     }
 
     return app;
