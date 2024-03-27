@@ -581,7 +581,7 @@ class KDVisualComponentContainer extends KDVisualComponent {
             //If this component has nested components, set the value of the component based on the field in the JSON object
             for (let i = 0; i < this.components.length; i++) {
                 let comp = this.components[i];
-                if (json[comp.field] !== undefined) {
+                if (json[comp.field] != undefined) {
                     if (comp instanceof KDVisualComponentContainer) {
                         comp.setData(json[comp.field])
                     } else {
