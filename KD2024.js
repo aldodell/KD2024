@@ -793,7 +793,7 @@ function KDList(params) {
             });
             return obj;
         }
-        return this;
+        return obj;
     }
     return obj;
 }
