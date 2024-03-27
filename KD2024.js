@@ -136,7 +136,7 @@ class KDComponent extends KDObject {
          * @description The value of the component
          * @type {any}
          */
-        this.value = undefined;
+        this.value = null;
 
         /**
          * @description If the component is built this property will be true.   
@@ -212,7 +212,7 @@ class KDComponent extends KDObject {
             this.isBuilt = true;
 
             //Assign html type if exists
-            if (this.htmlType !== null) {
+            if (this.htmlType != null) {
                 this.domElement.setAttribute("type", this.htmlType);
             }
 
@@ -274,12 +274,12 @@ class KDVisualComponent extends KDComponent {
     constructor(params) {
         super(params);
 
-
         /**
          * @description The width of the component
          * @type {int}
          */
         this.width = 300;
+
         /** 
          *  @description The height of the component
          * @type {int}
@@ -537,6 +537,9 @@ class KDVisualComponentContainer extends KDVisualComponent {
          */
         this.cssTextForChildren = ";";
 
+        /**
+         * JSON data
+         */
         this.data = null;
 
 
@@ -569,7 +572,7 @@ class KDVisualComponentContainer extends KDVisualComponent {
             this.data = json;
 
             //If this component has a field, set the value of the component based on the field in the JSON object
-            if (this.field !== undefined) {
+            if (this.field != null) {
                 if (json[this.field] != undefined) {
                     this.setValue(json[this.field]);
                 }
